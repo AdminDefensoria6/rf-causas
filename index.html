@@ -251,6 +251,14 @@
             font-weight: 500;
         }
 
+        /* Columna # con ancho fijo */
+        th:first-child, td:first-child {
+            width: 50px; /* Ancho fijo para 4 caracteres */
+            max-width: 50px;
+            min-width: 50px;
+            text-align: center;
+        }
+
         tr:hover {
             background-color: #f8f9fa;
         }
@@ -637,6 +645,18 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            /* Ajustes responsive para la tabla */
+            .table-container {
+                font-size: 0.9rem;
+            }
+            
+            th:first-child, td:first-child {
+                width: 40px; /* Ajuste para pantallas más pequeñas */
+                max-width: 40px;
+                min-width: 40px;
+                padding: 10px 5px;
+            }
         }
     </style>
 </head>
@@ -836,12 +856,50 @@
                                     <option value="Juzgado Civil y Comercial N° 6 - Posadas">Juzgado Civil y Comercial N° 6 - Posadas</option>
                                     <option value="Juzgado Civil y Comercial N° 7 - Posadas">Juzgado Civil y Comercial N° 7 - Posadas</option>
                                     <option value="Juzgado Civil y Comercial N° 8 - Posadas">Juzgado Civil y Comercial N° 8 - Posadas</option>
+                                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                                </optgroup>
+                                <optgroup label="Penal">
+                                    <option value="Juzgado de Instrucción N° 1 - Posadas">Juzgado de Instrucción N° 1 - Posadas</option>
+                                    <option value="Juzgado de Instrucción N° 2 - Posadas">Juzgado de Instrucción N° 2 - Posadas</option>
+                                    <option value="Juzgado de Instrucción N° 3 - Posadas">Juzgado de Instrucción N° 3 - Posadas</option>
+                                    <option value="Juzgado de Instrucción N° 6 - Posadas">Juzgado de Instrucción N° 6 - Posadas</option>
+                                    <option value="Juzgado de Instrucción N° 7 - Posadas">Juzgado de Instrucción N° 7 - Posadas</option>
+                                    <option value="Juzgado Correccional y de Menores N° 1 - Posadas">Juzgado Correccional y de Menores N° 1 - Posadas</option>
+                                    <option value="Juzgado Correccional y de Menores N° 2 - Posadas">Juzgado Correccional y de Menores N° 2 - Posadas</option>
+                                    <option value="Tribunal Penal N° 1 - Posadas">Tribunal Penal N° 1 - Posadas</option>
+                                    <option value="Tribunal Penal N° 2 - Posadas">Tribunal Penal N° 2 - Posadas</option>
+                                </optgroup>
+                                <optgroup label="Laboral">
+                                    <option value="Juzgado Laboral N° 1 - Posadas">Juzgado Laboral N° 1 - Posadas</option>
+                                    <option value="Juzgado Laboral N° 2 - Posadas">Juzgado Laboral N° 2 - Posadas</option>
+                                    <option value="Juzgado Laboral N° 3 - Posadas">Juzgado Laboral N° 3 - Posadas</option>
+                                    <option value="Juzgado Laboral N° 4 - Posadas">Juzgado Laboral N° 4 - Posadas</option>
                                 </optgroup>
                                 <optgroup label="Familia">
                                     <option value="Juzgado de Familia N° 1 - Posadas">Juzgado de Familia N° 1 - Posadas</option>
                                     <option value="Juzgado de Familia N° 2 - Posadas">Juzgado de Familia N° 2 - Posadas</option>
+                                    <option value="Juzgado de Familia N° 3 - Posadas">Juzgado de Familia N° 3 - Posadas</option>
+                                    <option value="Juzgado Familia y VF Garupa">Juzgado Familia y VF Garupa</option>
+                                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
                                 </optgroup>
-                                </select>
+                                <optgroup label="Violencia Familiar">
+                                    <option value="Juzgado de Violencia Familiar N° 1 - Posadas">Juzgado de Violencia Familiar N° 1 - Posadas</option>
+                                    <option value="Juzgado de Violencia Familiar N° 2 - Posadas">Juzgado de Violencia Familiar N° 2 - Posadas</option>
+                                    <option value="Juzgado F y Violencia Familiar Garupa">Juzgado F y Violencia Familiar Garupa</option>
+                                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                                </optgroup>
+                                <optgroup label="Paz">
+                                    <option value="Juzgado de Paz Civil Comercial N° 1 - Posadas">Juzgado de Paz Civil Comercial N° 1 - Posadas</option>
+                                    <option value="Juzgado de Paz Civil Comercial N° 2 - Posadas">Juzgado de Paz Civil Comercial N° 2 - Posadas</option>
+                                    <option value="Juzgado de Paz de Itaembe Mini - Posadas">Juzgado de Paz de Itaembe Mini - Posadas</option>
+                                    <option value="Juzgado de Paz de Itaembe Guazu - Posadas">Juzgado de Paz de Itaembe Guazu - Posadas</option>
+                                    <option value="Juzgado de Paz de Villa Cabello - Posadas">Juzgado de Paz de Villa Cabello - Posadas</option>
+                                    <option value="Juzgado de Paz de Garupa">Juzgado de Paz de Garupa</option>
+                                    <option value="Juzgado de Paz de Fatima - Garupa">Juzgado de Paz de Fatima - Garupa</option>
+                                    <option value="Juzgado de Paz de Apostoles">Juzgado de Paz de Apostoles</option>
+                                    <option value="Juzgado de Paz Candelaria">Juzgado de Paz Candelaria</option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="modo-intervencion">Modo de Intervención *</label>

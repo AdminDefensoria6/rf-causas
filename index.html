@@ -699,6 +699,68 @@
             color: #6c757d;
             cursor: not-allowed;
         }
+
+        /* ESTILOS PARA IMPRESIÓN */
+        @media print {
+            /* Ocultar elementos que no deben imprimirse */
+            #pagina-inicio,
+            .app-header,
+            .filters,
+            .tabla-paginacion,
+            td:last-child,
+            .header-buttons,
+            .btn {
+                display: none !important;
+            }
+            
+            /* Mostrar solo la tabla de registros */
+            #pagina-app {
+                display: block !important;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .table-container {
+                box-shadow: none;
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+            
+            table {
+                min-width: 100%;
+                width: 100%;
+                border: 1px solid #000;
+            }
+            
+            th, td {
+                border: 1px solid #000;
+                padding: 8px;
+            }
+            
+            th {
+                background-color: #f0f0f0 !important;
+                color: #000 !important;
+                font-weight: bold;
+            }
+            
+            /* Asegurar que la tabla ocupe toda la página */
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            /* Eliminar espacios innecesarios */
+            * {
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -724,15 +786,15 @@
     <div id="pagina-app">
         <div class="container">
             <div class="app-header">
-    <h1 class="app-title">Expedientes Asignados</h1>
-    <div class="header-buttons">
-        <span style="margin-right: 15px; color: #0f4c75; font-weight: 500; font-size: 1.1rem;">Bienvenido Rómulo Fioravante</span>
-        <button class="btn btn-success" id="nuevo-btn">Nuevo Expediente</button>
-        <button class="btn btn-primary" id="reporte-btn">Reporte</button>
-        <button class="btn btn-primary" id="print-btn">Imprimir Listado</button>
-        <button class="btn btn-danger" id="close-btn">Cerrar Sesión</button>
-    </div>
-</div>
+                <h1 class="app-title">Expedientes Asignados</h1>
+                <div class="header-buttons">
+                    <span style="margin-right: 15px; color: #0f4c75; font-weight: 500; font-size: 1.1rem;">Bienvenido Rómulo Fioravante</span>
+                    <button class="btn btn-success" id="nuevo-btn">Nuevo Expediente</button>
+                    <button class="btn btn-primary" id="reporte-btn">Reporte</button>
+                    <button class="btn btn-primary" id="print-btn">Imprimir Listado</button>
+                    <button class="btn btn-danger" id="close-btn">Cerrar Sesión</button>
+                </div>
+            </div>
 
             <div class="filters">
                 <input type="text" id="search" placeholder="Buscar en registros...">
@@ -782,7 +844,7 @@
                             <th>Descripción</th>
                             <th>Firma Digital</th>
                             <th>Observaciones</th>
-                            <th>Acciones</th>
+                            <th class="no-print">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="expedientes-tbody">
@@ -1265,7 +1327,7 @@
                             </button>
                         </td>
                         <td>${observacionesTexto}</td>
-                        <td>
+                        <td class="no-print">
                             <button class="btn-sm btn-info ver-btn" data-id="${exp.id}">Ver</button>
                             <button class="btn-sm btn-warning editar-btn" data-id="${exp.id}">Editar</button>
                             <button class="btn-sm btn-danger eliminar-btn" data-id="${exp.id}">Eliminar</button>
@@ -1342,6 +1404,118 @@
             
             controlesSuperior.appendChild(btnSiguiente.cloneNode(true));
             controlesInferior.appendChild(btnSiguiente);
+        }
+        
+        // Función para imprimir el listado completo de expedientes
+        function imprimirListadoCompleto() {
+            // Crear una ventana nueva para imprimir
+            const ventanaImpresion = window.open('', '_blank');
+            
+            // Obtener todos los expedientes sin filtrar
+            const expedientesCompletos = [...expedientes];
+            
+            // Crear el contenido HTML para la impresión
+            let contenidoHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Listado Completo de Expedientes</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 20px;
+                            font-size: 12px;
+                        }
+                        h1 {
+                            text-align: center;
+                            color: #0f4c75;
+                            margin-bottom: 20px;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid #000;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f0f0f0;
+                            font-weight: bold;
+                        }
+                        tr:nth-child(even) {
+                            background-color: #f9f9f9;
+                        }
+                        .firma-digital {
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Listado Completo de Expedientes</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha de pase</th>
+                                <th>Expediente y Carátula</th>
+                                <th>Descripción</th>
+                                <th>Firma Digital</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Agregar cada expediente a la tabla
+            expedientesCompletos.forEach((exp, index) => {
+                const numeroDescendente = expedientesCompletos.length - index;
+                
+                let observacionesTexto = '';
+                if (exp.notas && exp.notas.length > 0) {
+                    const ultimaNota = exp.notas[exp.notas.length - 1];
+                    observacionesTexto = `${ultimaNota.fecha}: ${ultimaNota.texto.substring(0, 30)}${ultimaNota.texto.length > 30 ? '...' : ''}`;
+                    if (exp.notas.length > 1) {
+                        observacionesTexto += ` (${exp.notas.length} notas)`;
+                    }
+                }
+                
+                const firmaDigital = exp.fechaFirmaDigital ? 'Sí' : 'No';
+                
+                contenidoHTML += `
+                    <tr>
+                        <td>${numeroDescendente}</td>
+                        <td>${exp.fechaPase || 'N/A'}</td>
+                        <td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td>
+                        <td>${exp.descripcion || 'N/A'}</td>
+                        <td class="firma-digital">${firmaDigital}</td>
+                        <td>${observacionesTexto}</td>
+                    </tr>
+                `;
+            });
+            
+            contenidoHTML += `
+                        </tbody>
+                    </table>
+                    <p style="text-align: right; margin-top: 20px; font-size: 10px;">
+                        Generado el ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}
+                    </p>
+                </body>
+                </html>
+            `;
+            
+            // Escribir el contenido en la ventana de impresión
+            ventanaImpresion.document.write(contenidoHTML);
+            ventanaImpresion.document.close();
+            
+            // Esperar a que se cargue el contenido y luego imprimir
+            ventanaImpresion.onload = function() {
+                ventanaImpresion.focus();
+                ventanaImpresion.print();
+                // Cerrar la ventana después de imprimir (opcional)
+                // ventanaImpresion.afterprint = function() { ventanaImpresion.close(); };
+            };
         }
         
         async function eliminarExpediente(id) {
@@ -1679,7 +1853,9 @@
             registroCancelarBtn.addEventListener('click', cerrarModalRegistro);
             registroGuardarBtn.addEventListener('click', guardarExpediente);
             
-            printBtn.addEventListener('click', () => window.print());
+            // Reemplazar la función de impresión anterior
+            printBtn.addEventListener('click', imprimirListadoCompleto);
+            
             reporteBtn.addEventListener('click', () => {
                 window.open('https://admindefensoria6.github.io/rf-causas/reporte.html', '_blank');
             });

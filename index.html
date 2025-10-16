@@ -658,6 +658,47 @@
                 padding: 10px 5px;
             }
         }
+
+        /* PAGINACIÓN DE TABLA PRINCIPAL */
+        .tabla-paginacion {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .tabla-paginacion-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .tabla-paginacion-controles {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tabla-paginacion-btn {
+            padding: 5px 10px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .tabla-paginacion-btn.active {
+            background-color: #0f4c75;
+            color: white;
+            border-color: #0f4c75;
+        }
+
+        .tabla-paginacion-btn:disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -724,6 +765,12 @@
                 </select>
             </div>
 
+            <!-- PAGINACIÓN SUPERIOR -->
+            <div class="tabla-paginacion" id="tabla-paginacion-superior">
+                <div class="tabla-paginacion-info" id="tabla-paginacion-info-superior">Mostrando 0-0 de 0 expedientes</div>
+                <div class="tabla-paginacion-controles" id="tabla-paginacion-controles-superior"></div>
+            </div>
+
             <div class="table-container">
                 <table id="expedientes-table">
                     <thead>
@@ -741,6 +788,12 @@
                     <tbody id="expedientes-tbody">
                         </tbody>
                 </table>
+            </div>
+
+            <!-- PAGINACIÓN INFERIOR -->
+            <div class="tabla-paginacion" id="tabla-paginacion-inferior">
+                <div class="tabla-paginacion-info" id="tabla-paginacion-info-inferior">Mostrando 0-0 de 0 expedientes</div>
+                <div class="tabla-paginacion-controles" id="tabla-paginacion-controles-inferior"></div>
             </div>
         </div>
     </div>
@@ -1076,6 +1129,10 @@
         let notasTemporales = [];
         let paginaActualNotas = 1;
         const notasPorPagina = 5;
+        
+        // Variables para paginación de tabla principal
+        let paginaActualTabla = 1;
+        const registrosPorPagina = 10;
 
         // --- Funciones de Utilidad ---
         function formatearFecha(fecha) {
@@ -1163,47 +1220,128 @@
                 return true;
             });
             
-            if (expedientesFiltrados.length === 0) {
+            // Calcular paginación
+            const totalExpedientes = expedientesFiltrados.length;
+            const totalPaginas = Math.ceil(totalExpedientes / registrosPorPagina);
+            
+            // Asegurar que la página actual está en un rango válido
+            if (paginaActualTabla > totalPaginas) {
+                paginaActualTabla = Math.max(1, totalPaginas);
+            }
+            
+            const inicio = (paginaActualTabla - 1) * registrosPorPagina;
+            const fin = inicio + registrosPorPagina;
+            const expedientesPagina = expedientesFiltrados.slice(inicio, fin);
+            
+            if (expedientesPagina.length === 0) {
                 const message = expedientes.length === 0 ? "No hay expedientes registrados" : "No se encontraron expedientes con los filtros aplicados.";
                 expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">${message}</td></tr>`; // Cambiado a 7 columnas
-                return;
-            }
-
-            // NUMERACIÓN DESCENDENTE CORREGIDA: El registro más reciente tiene el número más alto
-            expedientesFiltrados.forEach((exp, index) => {
-                const row = expedientesTbody.insertRow();
-                const numeroDescendente = expedientesFiltrados.length - index; // El más reciente tendrá el número más alto
-                
-                let observacionesTexto = '';
-                if (exp.notas && exp.notas.length > 0) {
-                    const ultimaNota = exp.notas[exp.notas.length - 1];
-                    observacionesTexto = `${ultimaNota.fecha}: ${ultimaNota.texto.substring(0, 30)}${ultimaNota.texto.length > 30 ? '...' : ''}`;
-                    if (exp.notas.length > 1) {
-                        observacionesTexto += ` (${exp.notas.length} notas)`;
+            } else {
+                // NUMERACIÓN DESCENDENTE CORREGIDA: El registro más reciente tiene el número más alto
+                expedientesPagina.forEach((exp, index) => {
+                    const row = expedientesTbody.insertRow();
+                    const numeroDescendente = totalExpedientes - inicio - index; // El más reciente tendrá el número más alto
+                    
+                    let observacionesTexto = '';
+                    if (exp.notas && exp.notas.length > 0) {
+                        const ultimaNota = exp.notas[exp.notas.length - 1];
+                        observacionesTexto = `${ultimaNota.fecha}: ${ultimaNota.texto.substring(0, 30)}${ultimaNota.texto.length > 30 ? '...' : ''}`;
+                        if (exp.notas.length > 1) {
+                            observacionesTexto += ` (${exp.notas.length} notas)`;
+                        }
                     }
+                    
+                    const firmaDigital = exp.fechaFirmaDigital ? 'si' : 'no';
+                    
+                    // COLUMNA UNIFICADA: Se muestran número y carátula juntos
+                    row.innerHTML = `
+                        <td>${numeroDescendente}</td>
+                        <td>${exp.fechaPase || 'N/A'}</td>
+                        <td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td>
+                        <td>${exp.descripcion || 'N/A'}</td>
+                        <td>
+                            <button class="btn-sm ${firmaDigital === 'si' ? 'btn-success-sm' : 'btn-danger-sm'}" disabled>
+                                ${firmaDigital === 'si' ? 'Sí' : 'No'}
+                            </button>
+                        </td>
+                        <td>${observacionesTexto}</td>
+                        <td>
+                            <button class="btn-sm btn-info ver-btn" data-id="${exp.id}">Ver</button>
+                            <button class="btn-sm btn-warning editar-btn" data-id="${exp.id}">Editar</button>
+                            <button class="btn-sm btn-danger eliminar-btn" data-id="${exp.id}">Eliminar</button>
+                        </td>
+                    `;
+                });
+            }
+            
+            // Actualizar controles de paginación
+            actualizarPaginacionTabla(totalExpedientes, totalPaginas);
+        }
+        
+        function actualizarPaginacionTabla(totalExpedientes, totalPaginas) {
+            // Actualizar información de paginación
+            const inicio = (paginaActualTabla - 1) * registrosPorPagina + 1;
+            const fin = Math.min(paginaActualTabla * registrosPorPagina, totalExpedientes);
+            
+            const infoTexto = totalExpedientes === 0 
+                ? 'No hay expedientes' 
+                : `Mostrando ${inicio}-${fin} de ${totalExpedientes} expedientes`;
+            
+            document.getElementById('tabla-paginacion-info-superior').textContent = infoTexto;
+            document.getElementById('tabla-paginacion-info-inferior').textContent = infoTexto;
+            
+            // Actualizar controles de paginación
+            const controlesSuperior = document.getElementById('tabla-paginacion-controles-superior');
+            const controlesInferior = document.getElementById('tabla-paginacion-controles-inferior');
+            
+            controlesSuperior.innerHTML = '';
+            controlesInferior.innerHTML = '';
+            
+            if (totalPaginas <= 1) return;
+            
+            // Botón anterior
+            const btnAnterior = document.createElement('button');
+            btnAnterior.className = 'tabla-paginacion-btn';
+            btnAnterior.innerHTML = '&laquo;';
+            btnAnterior.disabled = paginaActualTabla === 1;
+            btnAnterior.addEventListener('click', () => {
+                if (paginaActualTabla > 1) {
+                    paginaActualTabla--;
+                    mostrarExpedientesEnTabla();
                 }
-                
-                const firmaDigital = exp.fechaFirmaDigital ? 'si' : 'no';
-                
-                // COLUMNA UNIFICADA: Se muestran número y carátula juntos
-                row.innerHTML = `
-                    <td>${numeroDescendente}</td>
-                    <td>${exp.fechaPase || 'N/A'}</td>
-                    <td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td>
-                    <td>${exp.descripcion || 'N/A'}</td>
-                    <td>
-                        <button class="btn-sm ${firmaDigital === 'si' ? 'btn-success-sm' : 'btn-danger-sm'}" disabled>
-                            ${firmaDigital === 'si' ? 'Sí' : 'No'}
-                        </button>
-                    </td>
-                    <td>${observacionesTexto}</td>
-                    <td>
-                        <button class="btn-sm btn-info ver-btn" data-id="${exp.id}">Ver</button>
-                        <button class="btn-sm btn-warning editar-btn" data-id="${exp.id}">Editar</button>
-                        <button class="btn-sm btn-danger eliminar-btn" data-id="${exp.id}">Eliminar</button>
-                    </td>
-                `;
             });
+            
+            controlesSuperior.appendChild(btnAnterior.cloneNode(true));
+            controlesInferior.appendChild(btnAnterior);
+            
+            // Botones de página
+            for (let i = 1; i <= totalPaginas; i++) {
+                const btnPagina = document.createElement('button');
+                btnPagina.className = `tabla-paginacion-btn ${i === paginaActualTabla ? 'active' : ''}`;
+                btnPagina.textContent = i;
+                btnPagina.addEventListener('click', () => {
+                    paginaActualTabla = i;
+                    mostrarExpedientesEnTabla();
+                });
+                
+                controlesSuperior.appendChild(btnPagina.cloneNode(true));
+                controlesInferior.appendChild(btnPagina);
+            }
+            
+            // Botón siguiente
+            const btnSiguiente = document.createElement('button');
+            btnSiguiente.className = 'tabla-paginacion-btn';
+            btnSiguiente.innerHTML = '&raquo;';
+            btnSiguiente.disabled = paginaActualTabla === totalPaginas;
+            btnSiguiente.addEventListener('click', () => {
+                if (paginaActualTabla < totalPaginas) {
+                    paginaActualTabla++;
+                    mostrarExpedientesEnTabla();
+                }
+            });
+            
+            controlesSuperior.appendChild(btnSiguiente.cloneNode(true));
+            controlesInferior.appendChild(btnSiguiente);
         }
         
         async function eliminarExpediente(id) {
@@ -1593,8 +1731,14 @@
             textoNotaInput.addEventListener('keypress', (e) => e.key === 'Enter' && (e.preventDefault(), agregarNota()));
             
             [searchInput, monthFilter, yearFilter, signatureFilter].forEach(el => {
-                el.addEventListener('input', mostrarExpedientesEnTabla);
-                el.addEventListener('change', mostrarExpedientesEnTabla);
+                el.addEventListener('input', () => {
+                    paginaActualTabla = 1; // Reset a la primera página al filtrar
+                    mostrarExpedientesEnTabla();
+                });
+                el.addEventListener('change', () => {
+                    paginaActualTabla = 1; // Reset a la primera página al filtrar
+                    mostrarExpedientesEnTabla();
+                });
             });
             
             window.addEventListener('click', (e) => {

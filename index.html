@@ -687,6 +687,7 @@
     <div class="header-buttons">
         <span style="margin-right: 15px; color: #0f4c75; font-weight: 500; font-size: 1.1rem;">Bienvenido Rómulo Fioravante</span>
         <button class="btn btn-success" id="nuevo-btn">Nuevo Expediente</button>
+        <button class="btn btn-primary" id="reporte-btn">Reporte</button>
         <button class="btn btn-primary" id="print-btn">Imprimir Listado</button>
         <button class="btn btn-danger" id="close-btn">Cerrar Sesión</button>
     </div>
@@ -1037,6 +1038,7 @@
         const closeModalBtns = document.querySelectorAll('.close-modal');
         const modalCerrarBtn = document.getElementById('modal-cerrar-btn');
         const printBtn = document.getElementById('print-btn');
+        const reporteBtn = document.getElementById('reporte-btn');
         const closeBtn = document.getElementById('close-btn');
         const nuevoBtn = document.getElementById('nuevo-btn');
         const searchInput = document.getElementById('search');
@@ -1115,10 +1117,11 @@
                 const querySnapshot = await db.collection('expedientes').get();
                 expedientes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
+                // ORDEN DESCENDENTE: Más reciente primero
                 expedientes.sort((a, b) => {
                      const fechaA = new Date(formatearFechaParaInput(a.fechaPase));
                      const fechaB = new Date(formatearFechaParaInput(b.fechaPase));
-                     return fechaB - fechaA;
+                     return fechaB - fechaA; // Cambiado para orden descendente
                 });
 
                 mostrarExpedientesEnTabla();
@@ -1166,8 +1169,10 @@
                 return;
             }
 
+            // NUMERACIÓN DESCENDENTE CORREGIDA: El registro más reciente tiene el número más alto
             expedientesFiltrados.forEach((exp, index) => {
                 const row = expedientesTbody.insertRow();
+                const numeroDescendente = expedientesFiltrados.length - index; // El más reciente tendrá el número más alto
                 
                 let observacionesTexto = '';
                 if (exp.notas && exp.notas.length > 0) {
@@ -1182,7 +1187,7 @@
                 
                 // COLUMNA UNIFICADA: Se muestran número y carátula juntos
                 row.innerHTML = `
-                    <td>${index + 1}</td>
+                    <td>${numeroDescendente}</td>
                     <td>${exp.fechaPase || 'N/A'}</td>
                     <td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td>
                     <td>${exp.descripcion || 'N/A'}</td>
@@ -1537,6 +1542,9 @@
             registroGuardarBtn.addEventListener('click', guardarExpediente);
             
             printBtn.addEventListener('click', () => window.print());
+            reporteBtn.addEventListener('click', () => {
+                window.open('https://admindefensoria6.github.io/rf-causas/reporte.html', '_blank');
+            });
             closeBtn.addEventListener('click', cerrarSesion);
             
             nuevoBtn.addEventListener('click', () => abrirModalRegistro());

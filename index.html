@@ -1013,7 +1013,7 @@
                                     <option value="Juzgado de Paz de Garupa">Juzgado de Paz de Garupa</option>
                                     <option value="Juzgado de Paz de Fatima - Garupa">Juzgado de Paz de Fatima - Garupa</option>
                                     <option value="Juzgado de Paz de Apostoles">Juzgado de Paz de Apostoles</option>
-                                    <option value="Juzgado de Paz Candelaria">Juzgado de Paz Candelaria</option>
+                                    <option value="Juzgado de Paz de Candelaria">Juzgado de Paz de Candelaria</option>
                                 </optgroup>
                             </select>
                         </div>
@@ -1361,6 +1361,12 @@
             
             if (totalPaginas <= 1) return;
             
+            // Calcular el grupo de páginas actual (mostrar 5 páginas a la vez)
+            const paginasPorGrupo = 5;
+            const grupoActual = Math.ceil(paginaActualTabla / paginasPorGrupo);
+            const primeraPaginaGrupo = (grupoActual - 1) * paginasPorGrupo + 1;
+            const ultimaPaginaGrupo = Math.min(primeraPaginaGrupo + paginasPorGrupo - 1, totalPaginas);
+            
             // Botón anterior
             const btnAnterior = document.createElement('button');
             btnAnterior.className = 'tabla-paginacion-btn';
@@ -1376,8 +1382,23 @@
             controlesSuperior.appendChild(btnAnterior.cloneNode(true));
             controlesInferior.appendChild(btnAnterior);
             
-            // Botones de página
-            for (let i = 1; i <= totalPaginas; i++) {
+            // Botón anterior de grupo (<<)
+            if (primeraPaginaGrupo > 1) {
+                const btnAnteriorGrupo = document.createElement('button');
+                btnAnteriorGrupo.className = 'tabla-paginacion-btn';
+                btnAnteriorGrupo.innerHTML = '&lt;&lt;';
+                btnAnteriorGrupo.title = 'Grupo anterior';
+                btnAnteriorGrupo.addEventListener('click', () => {
+                    paginaActualTabla = primeraPaginaGrupo - paginasPorGrupo;
+                    mostrarExpedientesEnTabla();
+                });
+                
+                controlesSuperior.appendChild(btnAnteriorGrupo.cloneNode(true));
+                controlesInferior.appendChild(btnAnteriorGrupo);
+            }
+            
+            // Botones de página (solo las 5 del grupo actual)
+            for (let i = primeraPaginaGrupo; i <= ultimaPaginaGrupo; i++) {
                 const btnPagina = document.createElement('button');
                 btnPagina.className = `tabla-paginacion-btn ${i === paginaActualTabla ? 'active' : ''}`;
                 btnPagina.textContent = i;
@@ -1388,6 +1409,21 @@
                 
                 controlesSuperior.appendChild(btnPagina.cloneNode(true));
                 controlesInferior.appendChild(btnPagina);
+            }
+            
+            // Botón siguiente de grupo (>>)
+            if (ultimaPaginaGrupo < totalPaginas) {
+                const btnSiguienteGrupo = document.createElement('button');
+                btnSiguienteGrupo.className = 'tabla-paginacion-btn';
+                btnSiguienteGrupo.innerHTML = '&gt;&gt;';
+                btnSiguienteGrupo.title = 'Siguiente grupo';
+                btnSiguienteGrupo.addEventListener('click', () => {
+                    paginaActualTabla = primeraPaginaGrupo + paginasPorGrupo;
+                    mostrarExpedientesEnTabla();
+                });
+                
+                controlesSuperior.appendChild(btnSiguienteGrupo.cloneNode(true));
+                controlesInferior.appendChild(btnSiguienteGrupo);
             }
             
             // Botón siguiente

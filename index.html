@@ -1352,12 +1352,14 @@
             document.getElementById('tabla-paginacion-info-superior').textContent = infoTexto;
             document.getElementById('tabla-paginacion-info-inferior').textContent = infoTexto;
             
-            // Actualizar controles de paginación
-            const controlesSuperior = document.getElementById('tabla-paginacion-controles-superior');
-            const controlesInferior = document.getElementById('tabla-paginacion-controles-inferior');
-            
-            controlesSuperior.innerHTML = '';
-            controlesInferior.innerHTML = '';
+            // Actualizar controles de paginación para ambos (superior e inferior)
+            actualizarControlesPaginacion('tabla-paginacion-controles-superior', totalPaginas);
+            actualizarControlesPaginacion('tabla-paginacion-controles-inferior', totalPaginas);
+        }
+        
+        function actualizarControlesPaginacion(contenedorId, totalPaginas) {
+            const controles = document.getElementById(contenedorId);
+            controles.innerHTML = '';
             
             if (totalPaginas <= 1) return;
             
@@ -1378,9 +1380,7 @@
                     mostrarExpedientesEnTabla();
                 }
             });
-            
-            controlesSuperior.appendChild(btnAnterior.cloneNode(true));
-            controlesInferior.appendChild(btnAnterior);
+            controles.appendChild(btnAnterior);
             
             // Botón anterior de grupo (<<)
             if (primeraPaginaGrupo > 1) {
@@ -1392,9 +1392,7 @@
                     paginaActualTabla = primeraPaginaGrupo - paginasPorGrupo;
                     mostrarExpedientesEnTabla();
                 });
-                
-                controlesSuperior.appendChild(btnAnteriorGrupo.cloneNode(true));
-                controlesInferior.appendChild(btnAnteriorGrupo);
+                controles.appendChild(btnAnteriorGrupo);
             }
             
             // Botones de página (solo las 5 del grupo actual)
@@ -1406,9 +1404,7 @@
                     paginaActualTabla = i;
                     mostrarExpedientesEnTabla();
                 });
-                
-                controlesSuperior.appendChild(btnPagina.cloneNode(true));
-                controlesInferior.appendChild(btnPagina);
+                controles.appendChild(btnPagina);
             }
             
             // Botón siguiente de grupo (>>)
@@ -1421,9 +1417,7 @@
                     paginaActualTabla = primeraPaginaGrupo + paginasPorGrupo;
                     mostrarExpedientesEnTabla();
                 });
-                
-                controlesSuperior.appendChild(btnSiguienteGrupo.cloneNode(true));
-                controlesInferior.appendChild(btnSiguienteGrupo);
+                controles.appendChild(btnSiguienteGrupo);
             }
             
             // Botón siguiente
@@ -1437,9 +1431,7 @@
                     mostrarExpedientesEnTabla();
                 }
             });
-            
-            controlesSuperior.appendChild(btnSiguiente.cloneNode(true));
-            controlesInferior.appendChild(btnSiguiente);
+            controles.appendChild(btnSiguiente);
         }
         
         // Función para imprimir el listado completo de expedientes
@@ -1549,8 +1541,6 @@
             ventanaImpresion.onload = function() {
                 ventanaImpresion.focus();
                 ventanaImpresion.print();
-                // Cerrar la ventana después de imprimir (opcional)
-                // ventanaImpresion.afterprint = function() { ventanaImpresion.close(); };
             };
         }
         

@@ -450,7 +450,7 @@
             const COLORS_MODO = ['#0f4c75', '#1b6ca8', '#3282b8', '#bbe1fa', '#4a90e2', '#50e3c2', '#7ed321', '#f5a623', '#f8e71c'];
             const COLORS_ESTADO = ['#28a745', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#fd7e14'];
             const COLORS_ANUAL = '#39a7d8';
-            const COLORS_DIAS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'];
+            const COLORS_DIAS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']; // Solo 5 colores para Lunes a Viernes
 
             let cachedExpedientesData = []; // Cache para evitar recargar datos
             let allStatsData = {}; // Cache para los datos procesados (estadísticas)
@@ -500,8 +500,8 @@
                 const estadoPorFecha = {};
                 const statsAnual = {};
                 const relacionModoEstado = {}; // Nueva: relación entre modo y estado
-                const statsDiasSemana = Array(7).fill(0); // Nueva: distribución por día de la semana
-                const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                const statsDiasSemana = Array(5).fill(0); // Cambiado a 5 para Lunes a Viernes
+                const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']; // Solo días laborables
                 
                 // Variables para estadísticas de calidad
                 let datosCompletos = 0;
@@ -549,12 +549,15 @@
                             if (!estadoPorFecha[claveFecha]) estadoPorFecha[claveFecha] = {};
                             estadoPorFecha[claveFecha][estado] = (estadoPorFecha[claveFecha][estado] || 0) + 1;
                             
-                            // Análisis por día de la semana
+                            // Análisis por día de la semana (solo Lunes a Viernes)
                             try {
                                 const fecha = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
                                 if (!isNaN(fecha.getTime())) {
-                                    const diaSemana = fecha.getDay(); // 0 = Domingo, 6 = Sábado
-                                    statsDiasSemana[diaSemana]++;
+                                    const diaSemana = fecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+                                    // Solo contamos Lunes (1) a Viernes (5)
+                                    if (diaSemana >= 1 && diaSemana <= 5) {
+                                        statsDiasSemana[diaSemana - 1]++; // Restamos 1 para que Lunes sea índice 0
+                                    }
                                 }
                             } catch (e) {
                                 console.warn("Fecha inválida:", exp.fechaPase);
@@ -612,7 +615,7 @@
                 // Encontrar combinación más común
                 const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
                 
-                // Encontrar día más activo
+                // Encontrar día más activo (solo entre Lunes y Viernes)
                 let diaMasActivoIndex = 0;
                 let maxAsignaciones = 0;
                 statsDiasSemana.forEach((count, index) => {
@@ -716,7 +719,7 @@
                 crearGraficoBarrasAgrupadas('chartRelacionModoEstado', relacionData);
                 mostrarDetallesRelacion('detailsRelacionModoEstado', statsData.relacionModoEstado);
                 
-                // Sección 4: Días de la Semana (NUEVA)
+                // Sección 4: Días de la Semana (NUEVA) - Solo Lunes a Viernes
                 crearGraficoBarras('chartDiasSemana', diasSemana, statsDiasSemana, COLORS_DIAS);
                 mostrarDetallesDiasSemana('detailsDiasSemana', statsDiasSemana, diasSemana);
                 

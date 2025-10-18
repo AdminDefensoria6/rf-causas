@@ -207,9 +207,10 @@
             border-radius: 10px;
             margin-bottom: 20px;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .filters input, .filters select {
@@ -220,6 +221,7 @@
             color: #333;
             flex: 1;
             min-width: 150px;
+            max-width: 200px;
         }
 
         /* Tabla de expedientes - MODIFICADO (una columna menos) */
@@ -632,6 +634,10 @@
                 flex-direction: column;
             }
             
+            .filters input, .filters select {
+                max-width: 100%;
+            }
+            
             .form-row {
                 flex-direction: column;
                 gap: 0;
@@ -815,7 +821,6 @@
                 </select>
                 <select id="year-filter">
                     <option value="" selected>Todos los años</option>
-                    <option value="2023">2023</option>
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
@@ -824,6 +829,84 @@
                     <option value="Secretario">Secretario</option>
                     <option value="Defensor Titular">Defensor Titular</option>
                     <option value="Defensor Subrogante">Defensor Subrogante</option>
+                </select>
+                <!-- NUEVOS FILTROS AÑADIDOS -->
+                <select id="control-filter">
+                    <option value="">Todos los controles</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En control">En control</option>
+                    <option value="Completado el control">Completado</option>
+                </select>
+                <select id="juzgado-filter">
+                    <option value="">Todos los juzgados</option>
+                    <optgroup label="Administrativo">
+                        <option value="CEJUME - Posadas">CEJUME - Posadas</option>
+                        <option value="DEUT Defensorias - Posadas">DEUT Defensorias - Posadas</option>
+                        <option value="Legajo Defensoria Civil y Comercial N° 6">Legajo Defensoria Civil y Comercial N° 6</option>
+                    </optgroup>
+                    <optgroup label="Civil">
+                        <option value="Juzgado Civil y Comercial N° 1 - Posadas">Juzgado Civil y Comercial N° 1 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 2 - Posadas">Juzgado Civil y Comercial N° 2 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 3 - Posadas">Juzgado Civil y Comercial N° 3 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 4 - Posadas">Juzgado Civil y Comercial N° 4 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 5 - Posadas">Juzgado Civil y Comercial N° 5 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 6 - Posadas">Juzgado Civil y Comercial N° 6 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 7 - Posadas">Juzgado Civil y Comercial N° 7 - Posadas</option>
+                        <option value="Juzgado Civil y Comercial N° 8 - Posadas">Juzgado Civil y Comercial N° 8 - Posadas</option>
+                        <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                    </optgroup>
+                    <optgroup label="Penal">
+                        <option value="Juzgado de Instrucción N° 1 - Posadas">Juzgado de Instrucción N° 1 - Posadas</option>
+                        <option value="Juzgado de Instrucción N° 2 - Posadas">Juzgado de Instrucción N° 2 - Posadas</option>
+                        <option value="Juzgado de Instrucción N° 3 - Posadas">Juzgado de Instrucción N° 3 - Posadas</option>
+                        <option value="Juzgado de Instrucción N° 6 - Posadas">Juzgado de Instrucción N° 6 - Posadas</option>
+                        <option value="Juzgado de Instrucción N° 7 - Posadas">Juzgado de Instrucción N° 7 - Posadas</option>
+                        <option value="Juzgado Correccional y de Menores N° 1 - Posadas">Juzgado Correccional y de Menores N° 1 - Posadas</option>
+                        <option value="Juzgado Correccional y de Menores N° 2 - Posadas">Juzgado Correccional y de Menores N° 2 - Posadas</option>
+                        <option value="Tribunal Penal N° 1 - Posadas">Tribunal Penal N° 1 - Posadas</option>
+                        <option value="Tribunal Penal N° 2 - Posadas">Tribunal Penal N° 2 - Posadas</option>
+                    </optgroup>
+                    <optgroup label="Laboral">
+                        <option value="Juzgado Laboral N° 1 - Posadas">Juzgado Laboral N° 1 - Posadas</option>
+                        <option value="Juzgado Laboral N° 2 - Posadas">Juzgado Laboral N° 2 - Posadas</option>
+                        <option value="Juzgado Laboral N° 3 - Posadas">Juzgado Laboral N° 3 - Posadas</option>
+                        <option value="Juzgado Laboral N° 4 - Posadas">Juzgado Laboral N° 4 - Posadas</option>
+                    </optgroup>
+                    <optgroup label="Familia">
+                        <option value="Juzgado de Familia N° 1 - Posadas">Juzgado de Familia N° 1 - Posadas</option>
+                        <option value="Juzgado de Familia N° 2 - Posadas">Juzgado de Familia N° 2 - Posadas</option>
+                        <option value="Juzgado de Familia N° 3 - Posadas">Juzgado de Familia N° 3 - Posadas</option>
+                        <option value="Juzgado Familia y VF Garupa">Juzgado Familia y VF Garupa</option>
+                        <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                    </optgroup>
+                    <optgroup label="Violencia Familiar">
+                        <option value="Juzgado de Violencia Familiar N° 1 - Posadas">Juzgado de Violencia Familiar N° 1 - Posadas</option>
+                        <option value="Juzgado de Violencia Familiar N° 2 - Posadas">Juzgado de Violencia Familiar N° 2 - Posadas</option>
+                        <option value="Juzgado F y Violencia Familiar Garupa">Juzgado F y Violencia Familiar Garupa</option>
+                        <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                    </optgroup>
+                    <optgroup label="Paz">
+                        <option value="Juzgado de Paz Civil Comercial N° 1 - Posadas">Juzgado de Paz Civil Comercial N° 1 - Posadas</option>
+                        <option value="Juzgado de Paz Civil Comercial N° 2 - Posadas">Juzgado de Paz Civil Comercial N° 2 - Posadas</option>
+                        <option value="Juzgado de Paz de Itaembe Mini - Posadas">Juzgado de Paz de Itaembe Mini - Posadas</option>
+                        <option value="Juzgado de Paz de Itaembe Guazu - Posadas">Juzgado de Paz de Itaembe Guazu - Posadas</option>
+                        <option value="Juzgado de Paz de Villa Cabello - Posadas">Juzgado de Paz de Villa Cabello - Posadas</option>
+                        <option value="Juzgado de Paz de Garupa">Juzgado de Paz de Garupa</option>
+                        <option value="Juzgado de Paz de Fatima - Garupa">Juzgado de Paz de Fatima - Garupa</option>
+                        <option value="Juzgado de Paz de Apostoles">Juzgado de Paz de Apostoles</option>
+                        <option value="Juzgado de Paz de Candelaria">Juzgado de Paz de Candelaria</option>
+                    </optgroup>
+                </select>
+                <select id="intervencion-filter">
+                    <option value="">Todas las intervenciones</option>
+                    <option value="Ministerio Complementario">Ministerio Complementario</option>
+                    <option value="Ministerio Principal">Ministerio Principal</option>
+                    <option value="Patrocinante Actor">Patrocinante Actor</option>
+                    <option value="Patrocinante Demandado">Patrocinante Demandado</option>
+                    <option value="Patrocinante Tercero">Patrocinante Tercero</option>
+                    <option value="Defensor de Ausente">Defensor de Ausente</option>
+                    <option value="Defensor Oficial Asesor Letrado">Defensor Oficial Asesor Letrado</option>
+                    <option value="Asesor de incapaces">Asesor de incapaces</option>
                 </select>
             </div>
 
@@ -1160,6 +1243,11 @@
         const monthFilter = document.getElementById('month-filter');
         const yearFilter = document.getElementById('year-filter');
         const signatureFilter = document.getElementById('signature-filter');
+        // NUEVOS FILTROS
+        const controlFilter = document.getElementById('control-filter');
+        const juzgadoFilter = document.getElementById('juzgado-filter');
+        const intervencionFilter = document.getElementById('intervencion-filter');
+        
         const registroCancelarBtn = document.getElementById('registro-cancelar-btn');
         const registroGuardarBtn = document.getElementById('registro-guardar-btn');
         const registroModalTitle = document.getElementById('registro-modal-title');
@@ -1258,6 +1346,10 @@
                 const selectedMonth = monthFilter.value;
                 const selectedYear = yearFilter.value;
                 const selectedSignature = signatureFilter.value;
+                // NUEVOS FILTROS
+                const selectedControl = controlFilter.value;
+                const selectedJuzgado = juzgadoFilter.value;
+                const selectedIntervencion = intervencionFilter.value;
                 
                 if (searchText && 
                     !(exp.numeroYAnio?.toLowerCase().includes(searchText) ||
@@ -1278,6 +1370,11 @@
                     const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
                     if (recordSignature !== selectedSignature) return false;
                 }
+                
+                // NUEVOS FILTROS
+                if (selectedControl && exp.controlSecretario !== selectedControl) return false;
+                if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
+                if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
                 
                 return true;
             });
@@ -1932,7 +2029,10 @@
             agregarNotaBtn.addEventListener('click', agregarNota);
             textoNotaInput.addEventListener('keypress', (e) => e.key === 'Enter' && (e.preventDefault(), agregarNota()));
             
-            [searchInput, monthFilter, yearFilter, signatureFilter].forEach(el => {
+            // AGREGAR NUEVOS FILTROS A LOS EVENT LISTENERS
+            const filtros = [searchInput, monthFilter, yearFilter, signatureFilter, controlFilter, juzgadoFilter, intervencionFilter];
+            
+            filtros.forEach(el => {
                 el.addEventListener('input', () => {
                     paginaActualTabla = 1; // Reset a la primera página al filtrar
                     mostrarExpedientesEnTabla();

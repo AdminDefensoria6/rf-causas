@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     
     <style>
-        /* Estilos generales */
         * {
             margin: 0;
             padding: 0;
@@ -30,7 +29,6 @@
             padding: 20px;
         }
 
-        /* Encabezado fijo modificado */
         .app-header {
             position: sticky;
             top: 0;
@@ -57,7 +55,6 @@
             text-align: center;
         }
 
-        /* Indicador de totales NO INVASIVO (en el header) */
         .total-indicator {
             background: linear-gradient(90deg, #1b6ca8, #0f4c75);
             color: white;
@@ -79,7 +76,6 @@
             font-weight: 700;
         }
 
-        /* Botón de impresión */
         .print-button {
             background-color: #0f4c75;
             color: white;
@@ -95,14 +91,35 @@
             background-color: #1b6ca8;
         }
 
-        /* Contenedor principal de los gráficos */
+        .filters {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filters input, .filters select {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: white;
+            color: #333;
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 25px;
         }
         
-        /* Estilo de cada sección de gráficos */
         .chart-section {
             background-color: white;
             padding: 25px;
@@ -113,7 +130,6 @@
             gap: 30px;
         }
         
-        /* Nuevo estilo para la sección de gráficos por año */
         .chart-section-full {
              grid-column: 1 / -1;
              background-color: white;
@@ -135,7 +151,6 @@
             height: 350px; 
         }
 
-        /* Detalles debajo del gráfico */
         .chart-details {
             text-align: center;
             padding: 15px;
@@ -163,10 +178,9 @@
             font-weight: 500;
         }
         
-        /* Estilos específicos para la impresión de tablas */
         .print-table-container {
             margin-bottom: 30px;
-            page-break-inside: avoid; /* Evita que la tabla se rompa en una página */
+            page-break-inside: avoid;
         }
         .print-table-container h3 {
             color: #0f4c75;
@@ -190,7 +204,6 @@
             font-weight: 600;
         }
 
-        /* Nuevos estilos para estadísticas adicionales */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -260,9 +273,8 @@
             background-color: #f44336;
         }
         
-        /* Media Query para la vista de impresión */
         @media print {
-            .app-header, #loading-status, .print-button, .stats-grid, .error-message {
+            .app-header, #loading-status, .print-button, .stats-grid, .error-message, .filters {
                 display: none !important;
             }
             .total-indicator {
@@ -270,7 +282,6 @@
                 position: static !important;
                 margin-bottom: 20px;
             }
-            /* Ocultar gráficos y mostrar tablas */
             .dashboard-grid {
                 display: none !important; 
             }
@@ -278,7 +289,6 @@
                 display: block !important;
                 padding: 20px 0;
             }
-            /* Estilos de impresión para las secciones de gráficos (aunque están ocultas, prevencion) */
             .chart-section, .chart-section-full {
                 page-break-inside: avoid;
                 margin-bottom: 20px;
@@ -290,7 +300,6 @@
             }
         }
         
-        /* Media Query para responsividad del indicador */
         @media (max-width: 768px) {
             .app-header {
                 flex-direction: column;
@@ -310,6 +319,12 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+            .filters {
+                flex-direction: column;
+            }
+            .filters input, .filters select {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -328,13 +343,119 @@
 
     <main id="pagina-app" class="container">
         
+        <!-- Filtros -->
+        <div class="filters">
+            <input type="text" id="search" placeholder="Buscar en registros...">
+            <select id="month-filter">
+                <option value="">Todos los meses</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+            </select>
+            <select id="year-filter">
+                <option value="" selected>Todos los años</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+            <select id="signature-filter">
+                <option value="">Todas las firmas</option>
+                <option value="Secretario">Secretario</option>
+                <option value="Defensor Titular">Defensor Titular</option>
+                <option value="Defensor Subrogante">Defensor Subrogante</option>
+            </select>
+            <select id="control-filter">
+                <option value="">Todos los controles</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En control">En control</option>
+                <option value="Completado el control">Completado</option>
+            </select>
+            <select id="juzgado-filter">
+                <option value="">Todos los juzgados</option>
+                <optgroup label="Administrativo">
+                    <option value="CEJUME - Posadas">CEJUME - Posadas</option>
+                    <option value="DEUT Defensorias - Posadas">DEUT Defensorias - Posadas</option>
+                    <option value="Legajo Defensoria Civil y Comercial N° 6">Legajo Defensoria Civil y Comercial N° 6</option>
+                </optgroup>
+                <optgroup label="Civil">
+                    <option value="Juzgado Civil y Comercial N° 1 - Posadas">Juzgado Civil y Comercial N° 1 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 2 - Posadas">Juzgado Civil y Comercial N° 2 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 3 - Posadas">Juzgado Civil y Comercial N° 3 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 4 - Posadas">Juzgado Civil y Comercial N° 4 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 5 - Posadas">Juzgado Civil y Comercial N° 5 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 6 - Posadas">Juzgado Civil y Comercial N° 6 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 7 - Posadas">Juzgado Civil y Comercial N° 7 - Posadas</option>
+                    <option value="Juzgado Civil y Comercial N° 8 - Posadas">Juzgado Civil y Comercial N° 8 - Posadas</option>
+                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                </optgroup>
+                <optgroup label="Penal">
+                    <option value="Juzgado de Instrucción N° 1 - Posadas">Juzgado de Instrucción N° 1 - Posadas</option>
+                    <option value="Juzgado de Instrucción N° 2 - Posadas">Juzgado de Instrucción N° 2 - Posadas</option>
+                    <option value="Juzgado de Instrucción N° 3 - Posadas">Juzgado de Instrucción N° 3 - Posadas</option>
+                    <option value="Juzgado de Instrucción N° 6 - Posadas">Juzgado de Instrucción N° 6 - Posadas</option>
+                    <option value="Juzgado de Instrucción N° 7 - Posadas">Juzgado de Instrucción N° 7 - Posadas</option>
+                    <option value="Juzgado Correccional y de Menores N° 1 - Posadas">Juzgado Correccional y de Menores N° 1 - Posadas</option>
+                    <option value="Juzgado Correccional y de Menores N° 2 - Posadas">Juzgado Correccional y de Menores N° 2 - Posadas</option>
+                    <option value="Tribunal Penal N° 1 - Posadas">Tribunal Penal N° 1 - Posadas</option>
+                    <option value="Tribunal Penal N° 2 - Posadas">Tribunal Penal N° 2 - Posadas</option>
+                </optgroup>
+                <optgroup label="Laboral">
+                    <option value="Juzgado Laboral N° 1 - Posadas">Juzgado Laboral N° 1 - Posadas</option>
+                    <option value="Juzgado Laboral N° 2 - Posadas">Juzgado Laboral N° 2 - Posadas</option>
+                    <option value="Juzgado Laboral N° 3 - Posadas">Juzgado Laboral N° 3 - Posadas</option>
+                    <option value="Juzgado Laboral N° 4 - Posadas">Juzgado Laboral N° 4 - Posadas</option>
+                </optgroup>
+                <optgroup label="Familia">
+                    <option value="Juzgado de Familia N° 1 - Posadas">Juzgado de Familia N° 1 - Posadas</option>
+                    <option value="Juzgado de Familia N° 2 - Posadas">Juzgado de Familia N° 2 - Posadas</option>
+                    <option value="Juzgado de Familia N° 3 - Posadas">Juzgado de Familia N° 3 - Posadas</option>
+                    <option value="Juzgado Familia y VF Garupa">Juzgado Familia y VF Garupa</option>
+                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                </optgroup>
+                <optgroup label="Violencia Familiar">
+                    <option value="Juzgado de Violencia Familiar N° 1 - Posadas">Juzgado de Violencia Familiar N° 1 - Posadas</option>
+                    <option value="Juzgado de Violencia Familiar N° 2 - Posadas">Juzgado de Violencia Familiar N° 2 - Posadas</option>
+                    <option value="Juzgado F y Violencia Familiar Garupa">Juzgado F y Violencia Familiar Garupa</option>
+                    <option value="... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles">... Civil Comercial Laboral Familia y Violencia Fliar- Apostoles</option>
+                </optgroup>
+                <optgroup label="Paz">
+                    <option value="Juzgado de Paz Civil Comercial N° 1 - Posadas">Juzgado de Paz Civil Comercial N° 1 - Posadas</option>
+                    <option value="Juzgado de Paz Civil Comercial N° 2 - Posadas">Juzgado de Paz Civil Comercial N° 2 - Posadas</option>
+                    <option value="Juzgado de Paz de Itaembe Mini - Posadas">Juzgado de Paz de Itaembe Mini - Posadas</option>
+                    <option value="Juzgado de Paz de Itaembe Guazu - Posadas">Juzgado de Paz de Itaembe Guazu - Posadas</option>
+                    <option value="Juzgado de Paz de Villa Cabello - Posadas">Juzgado de Paz de Villa Cabello - Posadas</option>
+                    <option value="Juzgado de Paz de Garupa">Juzgado de Paz de Garupa</option>
+                    <option value="Juzgado de Paz de Fatima - Garupa">Juzgado de Paz de Fatima - Garupa</option>
+                    <option value="Juzgado de Paz de Apostoles">Juzgado de Paz de Apostoles</option>
+                    <option value="Juzgado de Paz de Candelaria">Juzgado de Paz de Candelaria</option>
+                </optgroup>
+            </select>
+            <select id="intervencion-filter">
+                <option value="">Todas las intervenciones</option>
+                <option value="Ministerio Complementario">Ministerio Complementario</option>
+                <option value="Ministerio Principal">Ministerio Principal</option>
+                <option value="Patrocinante Actor">Patrocinante Actor</option>
+                <option value="Patrocinante Demandado">Patrocinante Demandado</option>
+                <option value="Patrocinante Tercero">Patrocinante Tercero</option>
+                <option value="Defensor de Ausente">Defensor de Ausente</option>
+                <option value="Defensor Oficial Asesor Letrado">Defensor Oficial Asesor Letrado</option>
+                <option value="Asesor de incapaces">Asesor de incapaces</option>
+            </select>
+        </div>
+        
         <div id="container-estadisticas">
             <div id="print-tables-view" style="display: none;"></div> 
             
-            <!-- Mensaje de error -->
             <div class="error-message" id="error-message"></div>
             
-            <!-- Estadísticas rápidas -->
             <div class="stats-grid" id="stats-grid" style="display: none;">
                 <div class="stat-card">
                     <h4>Calidad de Datos</h4>
@@ -395,7 +516,6 @@
                     </div>
                 </section>
                 
-                <!-- NUEVA SECCIÓN: Análisis Cruzado -->
                 <section class="chart-section-full">
                     <h3>Relación: Modo de Intervención vs Estado de Control</h3>
                     <div class="chart-wrapper" style="height: 400px;">
@@ -404,7 +524,6 @@
                     <div class="chart-details" id="detailsRelacionModoEstado"></div>
                 </section>
                 
-                <!-- NUEVA SECCIÓN: Análisis Temporal -->
                 <section class="chart-section-full">
                     <h3>Distribución por Día de la Semana</h3>
                     <div class="chart-wrapper" style="height: 300px;">
@@ -429,7 +548,7 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Configuración de Firebase
+            // Configuración de Firebase
             const firebaseConfig = {
                 apiKey: "AIzaSyAcylOv_wDD16HbYoTLvYj_Beaa1_MON0I",
                 authDomain: "causasasignadas-def.firebaseapp.com",
@@ -446,14 +565,62 @@
             const errorMessage = document.getElementById('error-message');
             const statsGrid = document.getElementById('stats-grid');
             
+            // Elementos de filtros
+            const searchInput = document.getElementById('search');
+            const monthFilter = document.getElementById('month-filter');
+            const yearFilter = document.getElementById('year-filter');
+            const signatureFilter = document.getElementById('signature-filter');
+            const controlFilter = document.getElementById('control-filter');
+            const juzgadoFilter = document.getElementById('juzgado-filter');
+            const intervencionFilter = document.getElementById('intervencion-filter');
+            
             // Paletas de colores
             const COLORS_MODO = ['#0f4c75', '#1b6ca8', '#3282b8', '#bbe1fa', '#4a90e2', '#50e3c2', '#7ed321', '#f5a623', '#f8e71c'];
             const COLORS_ESTADO = ['#28a745', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#fd7e14'];
             const COLORS_ANUAL = '#39a7d8';
-            const COLORS_DIAS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']; // Solo 5 colores para Lunes a Viernes
+            const COLORS_DIAS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
 
-            let cachedExpedientesData = []; // Cache para evitar recargar datos
-            let allStatsData = {}; // Cache para los datos procesados (estadísticas)
+            let cachedExpedientesData = [];
+            let allStatsData = {};
+
+            // Función para aplicar filtros
+            function aplicarFiltros(expedientes) {
+                return expedientes.filter(exp => {
+                    const searchText = searchInput.value.toLowerCase();
+                    const selectedMonth = monthFilter.value;
+                    const selectedYear = yearFilter.value;
+                    const selectedSignature = signatureFilter.value;
+                    const selectedControl = controlFilter.value;
+                    const selectedJuzgado = juzgadoFilter.value;
+                    const selectedIntervencion = intervencionFilter.value;
+                    
+                    if (searchText && 
+                        !(exp.numeroYAnio?.toLowerCase().includes(searchText) ||
+                          exp.descripcion?.toLowerCase().includes(searchText) ||
+                          exp.caratula?.toLowerCase().includes(searchText))) {
+                        return false;
+                    }
+                    
+                    const fechaParts = exp.fechaPase ? exp.fechaPase.split('/') : [];
+                    if (fechaParts.length === 3) {
+                        if (selectedMonth && fechaParts[1] !== selectedMonth) return false;
+                        if (selectedYear && fechaParts[2] !== selectedYear) return false;
+                    } else if (selectedMonth || selectedYear) {
+                        return false;
+                    }
+                    
+                    if (selectedSignature) {
+                        const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
+                        if (recordSignature !== selectedSignature) return false;
+                    }
+                    
+                    if (selectedControl && exp.controlSecretario !== selectedControl) return false;
+                    if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
+                    if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
+                    
+                    return true;
+                });
+            }
 
             async function cargarYRenderizarEstadisticas() {
                 loadingStatus.textContent = 'Cargando datos desde Firebase...';
@@ -463,7 +630,6 @@
                     const querySnapshot = await db.collection('expedientes').get();
                     cachedExpedientesData = querySnapshot.docs.map(doc => {
                         const data = doc.data();
-                        // Validación básica de datos
                         if (!data.modoIntervencion) data.modoIntervencion = 'Sin definir';
                         if (!data.controlSecretario) data.controlSecretario = 'Sin estado';
                         return data;
@@ -474,17 +640,8 @@
                         return;
                     }
                     
-                    loadingStatus.style.display = 'none';
-
-                    // Actualizar el indicador de totales
-                    document.getElementById('total-casos').textContent = cachedExpedientesData.length;
-                    document.getElementById('total-indicator-container').style.display = 'block';
-                    printButton.style.display = 'block'; 
-
-                    allStatsData = procesarDatos(cachedExpedientesData);
-                    renderizarEstadisticas(allStatsData);
-                    actualizarEstadisticasRapidas(allStatsData);
-
+                    actualizarEstadisticasConFiltros();
+                    
                 } catch (error) {
                     console.error("Error al cargar datos:", error);
                     loadingStatus.textContent = `Error al conectar con la base de datos: ${error.message}`;
@@ -493,21 +650,40 @@
                 }
             }
             
+            function actualizarEstadisticasConFiltros() {
+                const expedientesFiltrados = aplicarFiltros(cachedExpedientesData);
+                
+                if (expedientesFiltrados.length === 0) {
+                    loadingStatus.textContent = 'No hay expedientes que coincidan con los filtros aplicados.';
+                    loadingStatus.style.display = 'block';
+                    return;
+                }
+                
+                loadingStatus.style.display = 'none';
+
+                // Actualizar el indicador de totales
+                document.getElementById('total-casos').textContent = expedientesFiltrados.length;
+                document.getElementById('total-indicator-container').style.display = 'block';
+                printButton.style.display = 'block'; 
+
+                allStatsData = procesarDatos(expedientesFiltrados);
+                renderizarEstadisticas(allStatsData);
+                actualizarEstadisticasRapidas(allStatsData);
+            }
+            
             function procesarDatos(data) {
                 const statsModo = {};
                 const statsEstado = {};
                 const modoPorFecha = {};
                 const estadoPorFecha = {};
                 const statsAnual = {};
-                const relacionModoEstado = {}; // Nueva: relación entre modo y estado
-                const statsDiasSemana = Array(5).fill(0); // Cambiado a 5 para Lunes a Viernes
-                const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']; // Solo días laborables
+                const relacionModoEstado = {};
+                const statsDiasSemana = Array(5).fill(0);
+                const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
                 
-                // Variables para estadísticas de calidad
                 let datosCompletos = 0;
                 let totalExpedientes = data.length;
                 
-                // Variables para análisis temporal
                 let fechaControlValida = 0;
                 let sumaDias = 0;
                 
@@ -515,7 +691,6 @@
                     const modo = exp.modoIntervencion || 'Sin definir';
                     const estado = exp.controlSecretario || 'Sin estado';
                     
-                    // Contar expedientes con datos completos
                     const tieneModo = exp.modoIntervencion && exp.modoIntervencion !== 'Sin definir';
                     const tieneEstado = exp.controlSecretario && exp.controlSecretario !== 'Sin estado';
                     const tieneFecha = exp.fechaPase && typeof exp.fechaPase === 'string';
@@ -524,11 +699,9 @@
                         datosCompletos++;
                     }
                     
-                    // Estadísticas básicas
                     statsModo[modo] = (statsModo[modo] || 0) + 1;
                     statsEstado[estado] = (statsEstado[estado] || 0) + 1;
                     
-                    // Relación entre modo y estado
                     if (!relacionModoEstado[modo]) {
                         relacionModoEstado[modo] = {};
                     }
@@ -540,23 +713,19 @@
                             const anio = partes[2]; 
                             const claveFecha = `${anio}-${partes[1]}`;
                             
-                            // Agrupación Anual
                             statsAnual[anio] = (statsAnual[anio] || 0) + 1;
                             
-                            // Agrupación Mensual
                             if (!modoPorFecha[claveFecha]) modoPorFecha[claveFecha] = {};
                             modoPorFecha[claveFecha][modo] = (modoPorFecha[claveFecha][modo] || 0) + 1;
                             if (!estadoPorFecha[claveFecha]) estadoPorFecha[claveFecha] = {};
                             estadoPorFecha[claveFecha][estado] = (estadoPorFecha[claveFecha][estado] || 0) + 1;
                             
-                            // Análisis por día de la semana (solo Lunes a Viernes)
                             try {
                                 const fecha = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
                                 if (!isNaN(fecha.getTime())) {
-                                    const diaSemana = fecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-                                    // Solo contamos Lunes (1) a Viernes (5)
+                                    const diaSemana = fecha.getDay();
                                     if (diaSemana >= 1 && diaSemana <= 5) {
-                                        statsDiasSemana[diaSemana - 1]++; // Restamos 1 para que Lunes sea índice 0
+                                        statsDiasSemana[diaSemana - 1]++;
                                     }
                                 }
                             } catch (e) {
@@ -565,7 +734,6 @@
                         }
                     }
                     
-                    // Análisis temporal entre asignación y control
                     if (exp.fechaPase && exp.fechaControl) {
                         try {
                             const partesPase = exp.fechaPase.split('/');
@@ -597,7 +765,6 @@
                 const countEstado = Object.values(statsEstado);
                 const labelsFechas = Object.keys(modoPorFecha).sort();
                 
-                // Distribución Anual
                 const labelsAnual = Object.keys(statsAnual).sort();
                 const countAnual = labelsAnual.map(year => statsAnual[year]);
                 
@@ -606,16 +773,12 @@
                 
                 const labelsFechasFormateados = labelsFechas.map(f => f.substring(5) + '/' + f.substring(0, 4));
                 
-                // Preparar datos para el gráfico de relación modo-estado
                 const relacionData = prepararDatosRelacion(relacionModoEstado, labelsModo, labelsEstado);
                 
-                // Calcular promedio de días
                 const promedioDias = fechaControlValida > 0 ? Math.round(sumaDias / fechaControlValida) : 0;
                 
-                // Encontrar combinación más común
                 const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
                 
-                // Encontrar día más activo (solo entre Lunes y Viernes)
                 let diaMasActivoIndex = 0;
                 let maxAsignaciones = 0;
                 statsDiasSemana.forEach((count, index) => {
@@ -630,7 +793,6 @@
                     labelsModo, countModo, labelsEstado, countEstado, 
                     labelsFechas: labelsFechasFormateados, datasetsModo, datasetsEstado,
                     labelsAnual, countAnual, dataTotal: data.length,
-                    // Nuevos datos
                     relacionData,
                     statsDiasSemana,
                     diasSemana,
@@ -655,7 +817,6 @@
             }
             
             function prepararDatosRelacion(relacionModoEstado, labelsModo, labelsEstado) {
-                // Preparar datos para gráfico de barras agrupadas
                 const datasets = [];
                 
                 labelsEstado.forEach((estado, index) => {
@@ -692,7 +853,6 @@
             }
             
             function renderizarEstadisticas(statsData) {
-                // Destruir gráficos existentes antes de crear nuevos
                 ['chartModoIntervencion', 'lineChartModoIntervencion', 'chartControlSecretario', 
                  'lineChartEstadoControl', 'chartDistribucionAnual', 'chartRelacionModoEstado', 
                  'chartDiasSemana'].forEach(id => Chart.getChart(id)?.destroy());
@@ -705,25 +865,20 @@
                     statsDiasSemana, diasSemana
                 } = statsData;
 
-                // Sección 1: Modo de Intervención
                 crearGraficoCircular('chartModoIntervencion', 'doughnut', labelsModo, countModo, COLORS_MODO);
                 crearGraficoLineal('lineChartModoIntervencion', labelsFechas, datasetsModo);
                 mostrarDetalles('detailsModoIntervencion', statsModo, "Modo más frecuente");
 
-                // Sección 2: Control de Secretario
                 crearGraficoCircular('chartControlSecretario', 'pie', labelsEstado, countEstado, COLORS_ESTADO);
                 crearGraficoLineal('lineChartEstadoControl', labelsFechas, datasetsEstado);
                 mostrarDetalles('detailsControlSecretario', statsEstado, "Estado predominante");
                 
-                // Sección 3: Relación Modo-Estado (NUEVA)
                 crearGraficoBarrasAgrupadas('chartRelacionModoEstado', relacionData);
                 mostrarDetallesRelacion('detailsRelacionModoEstado', statsData.relacionModoEstado);
                 
-                // Sección 4: Días de la Semana (NUEVA) - Solo Lunes a Viernes
                 crearGraficoBarras('chartDiasSemana', diasSemana, statsDiasSemana, COLORS_DIAS);
                 mostrarDetallesDiasSemana('detailsDiasSemana', statsDiasSemana, diasSemana);
                 
-                // Sección 5: Distribución Anual
                 crearGraficoBarras('chartDistribucionAnual', labelsAnual, countAnual, COLORS_ANUAL);
                 mostrarDetalles('detailsDistribucionAnual', statsAnual, "Año con más asignaciones");
             }
@@ -846,7 +1001,6 @@
                 const container = document.getElementById(containerId);
                 const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
                 
-                // Contar combinaciones únicas
                 let combinacionesUnicas = 0;
                 Object.keys(relacionModoEstado).forEach(modo => {
                     combinacionesUnicas += Object.keys(relacionModoEstado[modo]).length;
@@ -882,12 +1036,10 @@
             function actualizarEstadisticasRapidas(statsData) {
                 const { calidadDatos, promedioDias, combinacionMasComun, diaMasActivo } = statsData;
                 
-                // Actualizar calidad de datos
                 document.getElementById('quality-percentage').textContent = `${calidadDatos.porcentaje}%`;
                 const qualityBar = document.getElementById('quality-indicator-bar');
                 qualityBar.style.width = `${calidadDatos.porcentaje}%`;
                 
-                // Aplicar color según el porcentaje
                 if (calidadDatos.porcentaje >= 80) {
                     qualityBar.className = 'quality-fill quality-good';
                 } else if (calidadDatos.porcentaje >= 60) {
@@ -896,7 +1048,6 @@
                     qualityBar.className = 'quality-fill quality-poor';
                 }
                 
-                // Actualizar otras estadísticas
                 document.getElementById('avg-days').textContent = promedioDias;
                 document.getElementById('active-day').textContent = diaMasActivo;
                 document.getElementById('common-combination').textContent = 
@@ -904,15 +1055,9 @@
                     combinacionMasComun.substring(0, 15) + '...' : 
                     combinacionMasComun;
                 
-                // Mostrar el grid de estadísticas rápidas
                 statsGrid.style.display = 'grid';
             }
 
-            // -------------------------------------------------------------------
-            // FUNCIONES PARA GENERAR Y MOSTRAR TABLAS
-            // -------------------------------------------------------------------
-            
-            // Función auxiliar para generar la tabla HTML de una estadística
             function generarTablaHTML(titulo, stats, total) {
                 let tableHTML = `
                     <div class="print-table-container">
@@ -928,7 +1073,6 @@
                             <tbody>
                 `;
 
-                // Ordenar por cantidad descendente
                 const entries = Object.entries(stats).sort((a, b) => b[1] - a[1]); 
 
                 entries.forEach(([categoria, cantidad]) => {
@@ -950,7 +1094,6 @@
                 return tableHTML;
             }
             
-            // Función para generar tabla de relación modo-estado
             function generarTablaRelacion(titulo, relacionModoEstado, total) {
                 let tableHTML = `
                     <div class="print-table-container">
@@ -961,21 +1104,18 @@
                                     <th>Modo de Intervención</th>
                 `;
                 
-                // Obtener todos los estados únicos
                 const estados = new Set();
                 Object.values(relacionModoEstado).forEach(estadosModo => {
                     Object.keys(estadosModo).forEach(estado => estados.add(estado));
                 });
                 const estadosArray = Array.from(estados);
                 
-                // Encabezados de columnas (estados)
                 estadosArray.forEach(estado => {
                     tableHTML += `<th>${estado}</th>`;
                 });
                 tableHTML += `<th>Total</th>`;
                 tableHTML += `</tr></thead><tbody>`;
                 
-                // Filas de datos
                 Object.keys(relacionModoEstado).forEach(modo => {
                     tableHTML += `<tr><td>${modo}</td>`;
                     let totalModo = 0;
@@ -989,7 +1129,6 @@
                     tableHTML += `<td><strong>${totalModo}</strong></td></tr>`;
                 });
                 
-                // Fila de totales
                 tableHTML += `<tr><td><strong>Total</strong></td>`;
                 estadosArray.forEach(estado => {
                     let totalEstado = 0;
@@ -1004,7 +1143,6 @@
                 return tableHTML;
             }
             
-            // Función principal para generar el contenedor de tablas
             function generarContenidoTablas(statsData) {
                 const { statsModo, statsEstado, statsAnual, relacionModoEstado, dataTotal } = statsData;
                 
@@ -1018,19 +1156,14 @@
                 return tablasHTML;
             }
             
-            // Lógica para el botón de impresión
             printButton.addEventListener('click', function() {
                 if (cachedExpedientesData.length > 0) {
                     const printContainer = document.getElementById('print-tables-view');
                     
-                    // 1. Generar la estructura de tablas y inyectar
                     printContainer.innerHTML = generarContenidoTablas(allStatsData);
                     
-                    // 2. Ejecutar la impresión. El CSS media query se encargará de mostrar solo las tablas.
                     window.print();
                     
-                    // 3. Limpiar la tabla inyectada después de la impresión
-                    // Se usa un pequeño timeout para que la limpieza no ocurra antes de que se complete la impresión.
                     setTimeout(() => {
                          printContainer.innerHTML = '';
                     }, 500);
@@ -1038,6 +1171,14 @@
                 } else {
                     alert('No hay datos para imprimir.');
                 }
+            });
+
+            // Event listeners para los filtros
+            const filtros = [searchInput, monthFilter, yearFilter, signatureFilter, controlFilter, juzgadoFilter, intervencionFilter];
+            
+            filtros.forEach(el => {
+                el.addEventListener('input', actualizarEstadisticasConFiltros);
+                el.addEventListener('change', actualizarEstadisticasConFiltros);
             });
 
             cargarYRenderizarEstadisticas();

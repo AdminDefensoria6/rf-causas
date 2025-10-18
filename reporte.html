@@ -190,9 +190,79 @@
             font-weight: 600;
         }
 
+        /* Nuevos estilos para estadísticas adicionales */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        
+        .stat-card h4 {
+            color: #0f4c75;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1b6ca8;
+        }
+        
+        .stat-card .stat-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .quality-indicator {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .quality-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .quality-good {
+            background-color: #4caf50;
+        }
+        
+        .quality-medium {
+            background-color: #ff9800;
+        }
+        
+        .quality-poor {
+            background-color: #f44336;
+        }
+        
         /* Media Query para la vista de impresión */
         @media print {
-            .app-header, #loading-status, .print-button {
+            .app-header, #loading-status, .print-button, .stats-grid, .error-message {
                 display: none !important;
             }
             .total-indicator {
@@ -234,6 +304,12 @@
             .total-indicator, .print-button {
                 width: 100%;
             }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -254,6 +330,36 @@
         
         <div id="container-estadisticas">
             <div id="print-tables-view" style="display: none;"></div> 
+            
+            <!-- Mensaje de error -->
+            <div class="error-message" id="error-message"></div>
+            
+            <!-- Estadísticas rápidas -->
+            <div class="stats-grid" id="stats-grid" style="display: none;">
+                <div class="stat-card">
+                    <h4>Calidad de Datos</h4>
+                    <div class="quality-indicator">
+                        <div class="quality-fill" id="quality-indicator-bar"></div>
+                    </div>
+                    <div class="stat-value" id="quality-percentage">0%</div>
+                    <div class="stat-subtitle">Expedientes con datos completos</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Días Promedio</h4>
+                    <div class="stat-value" id="avg-days">0</div>
+                    <div class="stat-subtitle">Entre asignación y control</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Día Más Activo</h4>
+                    <div class="stat-value" id="active-day">-</div>
+                    <div class="stat-subtitle">Con más asignaciones</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Modo/Estado Más Común</h4>
+                    <div class="stat-value" id="common-combination">-</div>
+                    <div class="stat-subtitle">Combinación más frecuente</div>
+                </div>
+            </div>
             
             <div class="dashboard-grid">
                 
@@ -289,6 +395,24 @@
                     </div>
                 </section>
                 
+                <!-- NUEVA SECCIÓN: Análisis Cruzado -->
+                <section class="chart-section-full">
+                    <h3>Relación: Modo de Intervención vs Estado de Control</h3>
+                    <div class="chart-wrapper" style="height: 400px;">
+                        <canvas id="chartRelacionModoEstado"></canvas>
+                    </div>
+                    <div class="chart-details" id="detailsRelacionModoEstado"></div>
+                </section>
+                
+                <!-- NUEVA SECCIÓN: Análisis Temporal -->
+                <section class="chart-section-full">
+                    <h3>Distribución por Día de la Semana</h3>
+                    <div class="chart-wrapper" style="height: 300px;">
+                        <canvas id="chartDiasSemana"></canvas>
+                    </div>
+                    <div class="chart-details" id="detailsDiasSemana"></div>
+                </section>
+
                 <section class="chart-section-full">
                     <h3>Distribución Anual de Casos</h3>
                     <div class="chart-wrapper" style="height: 300px;">
@@ -319,20 +443,31 @@
             const db = firebase.firestore();
             const loadingStatus = document.getElementById('loading-status');
             const printButton = document.getElementById('print-stats-button');
+            const errorMessage = document.getElementById('error-message');
+            const statsGrid = document.getElementById('stats-grid');
             
             // Paletas de colores
             const COLORS_MODO = ['#0f4c75', '#1b6ca8', '#3282b8', '#bbe1fa', '#4a90e2', '#50e3c2', '#7ed321', '#f5a623', '#f8e71c'];
             const COLORS_ESTADO = ['#28a745', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#fd7e14'];
             const COLORS_ANUAL = '#39a7d8';
+            const COLORS_DIAS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'];
 
             let cachedExpedientesData = []; // Cache para evitar recargar datos
             let allStatsData = {}; // Cache para los datos procesados (estadísticas)
 
             async function cargarYRenderizarEstadisticas() {
                 loadingStatus.textContent = 'Cargando datos desde Firebase...';
+                errorMessage.style.display = 'none';
+                
                 try {
                     const querySnapshot = await db.collection('expedientes').get();
-                    cachedExpedientesData = querySnapshot.docs.map(doc => doc.data());
+                    cachedExpedientesData = querySnapshot.docs.map(doc => {
+                        const data = doc.data();
+                        // Validación básica de datos
+                        if (!data.modoIntervencion) data.modoIntervencion = 'Sin definir';
+                        if (!data.controlSecretario) data.controlSecretario = 'Sin estado';
+                        return data;
+                    });
                     
                     if (cachedExpedientesData.length === 0) {
                         loadingStatus.textContent = 'No se encontraron expedientes para mostrar estadísticas.';
@@ -348,10 +483,13 @@
 
                     allStatsData = procesarDatos(cachedExpedientesData);
                     renderizarEstadisticas(allStatsData);
+                    actualizarEstadisticasRapidas(allStatsData);
 
                 } catch (error) {
                     console.error("Error al cargar datos:", error);
                     loadingStatus.textContent = `Error al conectar con la base de datos: ${error.message}`;
+                    errorMessage.textContent = `Error al cargar datos: ${error.message}. Por favor, recarga la página.`;
+                    errorMessage.style.display = 'block';
                 }
             }
             
@@ -360,14 +498,41 @@
                 const statsEstado = {};
                 const modoPorFecha = {};
                 const estadoPorFecha = {};
-                const statsAnual = {}; 
-
+                const statsAnual = {};
+                const relacionModoEstado = {}; // Nueva: relación entre modo y estado
+                const statsDiasSemana = Array(7).fill(0); // Nueva: distribución por día de la semana
+                const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                
+                // Variables para estadísticas de calidad
+                let datosCompletos = 0;
+                let totalExpedientes = data.length;
+                
+                // Variables para análisis temporal
+                let fechaControlValida = 0;
+                let sumaDias = 0;
+                
                 data.forEach(exp => {
                     const modo = exp.modoIntervencion || 'Sin definir';
                     const estado = exp.controlSecretario || 'Sin estado';
                     
+                    // Contar expedientes con datos completos
+                    const tieneModo = exp.modoIntervencion && exp.modoIntervencion !== 'Sin definir';
+                    const tieneEstado = exp.controlSecretario && exp.controlSecretario !== 'Sin estado';
+                    const tieneFecha = exp.fechaPase && typeof exp.fechaPase === 'string';
+                    
+                    if (tieneModo && tieneEstado && tieneFecha) {
+                        datosCompletos++;
+                    }
+                    
+                    // Estadísticas básicas
                     statsModo[modo] = (statsModo[modo] || 0) + 1;
                     statsEstado[estado] = (statsEstado[estado] || 0) + 1;
+                    
+                    // Relación entre modo y estado
+                    if (!relacionModoEstado[modo]) {
+                        relacionModoEstado[modo] = {};
+                    }
+                    relacionModoEstado[modo][estado] = (relacionModoEstado[modo][estado] || 0) + 1;
 
                     if (exp.fechaPase && typeof exp.fechaPase === 'string') {
                         const partes = exp.fechaPase.split('/');
@@ -383,6 +548,42 @@
                             modoPorFecha[claveFecha][modo] = (modoPorFecha[claveFecha][modo] || 0) + 1;
                             if (!estadoPorFecha[claveFecha]) estadoPorFecha[claveFecha] = {};
                             estadoPorFecha[claveFecha][estado] = (estadoPorFecha[claveFecha][estado] || 0) + 1;
+                            
+                            // Análisis por día de la semana
+                            try {
+                                const fecha = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
+                                if (!isNaN(fecha.getTime())) {
+                                    const diaSemana = fecha.getDay(); // 0 = Domingo, 6 = Sábado
+                                    statsDiasSemana[diaSemana]++;
+                                }
+                            } catch (e) {
+                                console.warn("Fecha inválida:", exp.fechaPase);
+                            }
+                        }
+                    }
+                    
+                    // Análisis temporal entre asignación y control
+                    if (exp.fechaPase && exp.fechaControl) {
+                        try {
+                            const partesPase = exp.fechaPase.split('/');
+                            const partesControl = exp.fechaControl.split('/');
+                            
+                            if (partesPase.length === 3 && partesControl.length === 3) {
+                                const fechaPase = new Date(`${partesPase[2]}-${partesPase[1]}-${partesPase[0]}`);
+                                const fechaControl = new Date(`${partesControl[2]}-${partesControl[1]}-${partesControl[0]}`);
+                                
+                                if (!isNaN(fechaPase.getTime()) && !isNaN(fechaControl.getTime())) {
+                                    const diferenciaMs = fechaControl.getTime() - fechaPase.getTime();
+                                    const diferenciaDias = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
+                                    
+                                    if (diferenciaDias >= 0) {
+                                        sumaDias += diferenciaDias;
+                                        fechaControlValida++;
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            console.warn("Error calculando diferencia de fechas:", e);
                         }
                     }
                 });
@@ -401,12 +602,43 @@
                 const datasetsEstado = prepararDatasetsLineales(labelsEstado, labelsFechas, estadoPorFecha, COLORS_ESTADO);
                 
                 const labelsFechasFormateados = labelsFechas.map(f => f.substring(5) + '/' + f.substring(0, 4));
+                
+                // Preparar datos para el gráfico de relación modo-estado
+                const relacionData = prepararDatosRelacion(relacionModoEstado, labelsModo, labelsEstado);
+                
+                // Calcular promedio de días
+                const promedioDias = fechaControlValida > 0 ? Math.round(sumaDias / fechaControlValida) : 0;
+                
+                // Encontrar combinación más común
+                const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
+                
+                // Encontrar día más activo
+                let diaMasActivoIndex = 0;
+                let maxAsignaciones = 0;
+                statsDiasSemana.forEach((count, index) => {
+                    if (count > maxAsignaciones) {
+                        maxAsignaciones = count;
+                        diaMasActivoIndex = index;
+                    }
+                });
 
                 return { 
-                    statsModo, statsEstado, statsAnual,
+                    statsModo, statsEstado, statsAnual, relacionModoEstado,
                     labelsModo, countModo, labelsEstado, countEstado, 
                     labelsFechas: labelsFechasFormateados, datasetsModo, datasetsEstado,
-                    labelsAnual, countAnual, dataTotal: data.length
+                    labelsAnual, countAnual, dataTotal: data.length,
+                    // Nuevos datos
+                    relacionData,
+                    statsDiasSemana,
+                    diasSemana,
+                    calidadDatos: {
+                        completos: datosCompletos,
+                        total: totalExpedientes,
+                        porcentaje: totalExpedientes > 0 ? (datosCompletos / totalExpedientes * 100).toFixed(1) : 0
+                    },
+                    promedioDias,
+                    combinacionMasComun,
+                    diaMasActivo: diasSemana[diaMasActivoIndex]
                 };
             }
             
@@ -419,16 +651,55 @@
                 }));
             }
             
+            function prepararDatosRelacion(relacionModoEstado, labelsModo, labelsEstado) {
+                // Preparar datos para gráfico de barras agrupadas
+                const datasets = [];
+                
+                labelsEstado.forEach((estado, index) => {
+                    const data = labelsModo.map(modo => relacionModoEstado[modo]?.[estado] || 0);
+                    
+                    datasets.push({
+                        label: estado,
+                        data: data,
+                        backgroundColor: COLORS_ESTADO[index % COLORS_ESTADO.length]
+                    });
+                });
+                
+                return {
+                    labels: labelsModo,
+                    datasets: datasets
+                };
+            }
+            
+            function encontrarCombinacionMasComun(relacionModoEstado) {
+                let maxCount = 0;
+                let combinacion = '';
+                
+                Object.keys(relacionModoEstado).forEach(modo => {
+                    Object.keys(relacionModoEstado[modo]).forEach(estado => {
+                        const count = relacionModoEstado[modo][estado];
+                        if (count > maxCount) {
+                            maxCount = count;
+                            combinacion = `${modo} / ${estado}`;
+                        }
+                    });
+                });
+                
+                return combinacion;
+            }
+            
             function renderizarEstadisticas(statsData) {
                 // Destruir gráficos existentes antes de crear nuevos
-                ['chartModoIntervencion', 'lineChartModoIntervencion', 'chartControlSecretario', 'lineChartEstadoControl', 'chartDistribucionAnual']
-                    .forEach(id => Chart.getChart(id)?.destroy());
+                ['chartModoIntervencion', 'lineChartModoIntervencion', 'chartControlSecretario', 
+                 'lineChartEstadoControl', 'chartDistribucionAnual', 'chartRelacionModoEstado', 
+                 'chartDiasSemana'].forEach(id => Chart.getChart(id)?.destroy());
 
                 const { 
                     statsModo, statsEstado, statsAnual,
                     labelsModo, countModo, labelsEstado, countEstado, 
                     labelsFechas, datasetsModo, datasetsEstado,
-                    labelsAnual, countAnual
+                    labelsAnual, countAnual, relacionData,
+                    statsDiasSemana, diasSemana
                 } = statsData;
 
                 // Sección 1: Modo de Intervención
@@ -441,7 +712,15 @@
                 crearGraficoLineal('lineChartEstadoControl', labelsFechas, datasetsEstado);
                 mostrarDetalles('detailsControlSecretario', statsEstado, "Estado predominante");
                 
-                // Sección 3: Distribución Anual
+                // Sección 3: Relación Modo-Estado (NUEVA)
+                crearGraficoBarrasAgrupadas('chartRelacionModoEstado', relacionData);
+                mostrarDetallesRelacion('detailsRelacionModoEstado', statsData.relacionModoEstado);
+                
+                // Sección 4: Días de la Semana (NUEVA)
+                crearGraficoBarras('chartDiasSemana', diasSemana, statsDiasSemana, COLORS_DIAS);
+                mostrarDetallesDiasSemana('detailsDiasSemana', statsDiasSemana, diasSemana);
+                
+                // Sección 5: Distribución Anual
                 crearGraficoBarras('chartDistribucionAnual', labelsAnual, countAnual, COLORS_ANUAL);
                 mostrarDetalles('detailsDistribucionAnual', statsAnual, "Año con más asignaciones");
             }
@@ -450,7 +729,24 @@
                 new Chart(document.getElementById(canvasId), {
                     type: tipo,
                     data: { labels, datasets: [{ data, backgroundColor: colores }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        } 
+                    }
                 });
             }
 
@@ -458,28 +754,71 @@
                  new Chart(document.getElementById(canvasId), {
                     type: 'line',
                     data: { labels, datasets },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { position: 'bottom' } } }
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        scales: { 
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { stepSize: 1 } 
+                            } 
+                        }, 
+                        plugins: { 
+                            legend: { position: 'bottom' } 
+                        } 
+                    }
                 });
             }
             
             function crearGraficoBarras(canvasId, labels, data, color) {
                 new Chart(document.getElementById(canvasId), {
                     type: 'bar',
-                    data: { labels, datasets: [{ 
-                        label: 'Casos Asignados',
-                        data: data, 
-                        backgroundColor: color 
-                    }] },
+                    data: { 
+                        labels, 
+                        datasets: [{ 
+                            label: 'Casos Asignados',
+                            data: data, 
+                            backgroundColor: color 
+                        }] 
+                    },
                     options: { 
                         responsive: true, 
                         maintainAspectRatio: false, 
                         scales: { 
-                            y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                            x: { grid: { display: false } }
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { stepSize: 1 } 
+                            },
+                            x: { 
+                                grid: { display: false } 
+                            }
                         }, 
                         plugins: { 
                             legend: { display: false } 
                         } 
+                    }
+                });
+            }
+            
+            function crearGraficoBarrasAgrupadas(canvasId, data) {
+                new Chart(document.getElementById(canvasId), {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                grid: { display: false }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
                     }
                 });
             }
@@ -499,9 +838,75 @@
                     <p>Cantidad: <span class="detail-value">${cantidad} de ${total}</span> (${porcentaje}%)</p>
                 `;
             }
+            
+            function mostrarDetallesRelacion(containerId, relacionModoEstado) {
+                const container = document.getElementById(containerId);
+                const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
+                
+                // Contar combinaciones únicas
+                let combinacionesUnicas = 0;
+                Object.keys(relacionModoEstado).forEach(modo => {
+                    combinacionesUnicas += Object.keys(relacionModoEstado[modo]).length;
+                });
+                
+                container.innerHTML = `
+                    <p>Combinación más frecuente: <span class="detail-value">${combinacionMasComun}</span></p>
+                    <p>Combinaciones únicas: <span class="detail-value">${combinacionesUnicas}</span></p>
+                `;
+            }
+            
+            function mostrarDetallesDiasSemana(containerId, statsDiasSemana, diasSemana) {
+                const container = document.getElementById(containerId);
+                let diaMasActivo = '';
+                let maxAsignaciones = 0;
+                
+                statsDiasSemana.forEach((count, index) => {
+                    if (count > maxAsignaciones) {
+                        maxAsignaciones = count;
+                        diaMasActivo = diasSemana[index];
+                    }
+                });
+                
+                const total = statsDiasSemana.reduce((a, b) => a + b, 0);
+                const porcentaje = ((maxAsignaciones / total) * 100).toFixed(1);
+                
+                container.innerHTML = `
+                    <p>Día más activo: <span class="detail-value">${diaMasActivo}</span></p>
+                    <p>Asignaciones: <span class="detail-value">${maxAsignaciones} de ${total}</span> (${porcentaje}%)</p>
+                `;
+            }
+            
+            function actualizarEstadisticasRapidas(statsData) {
+                const { calidadDatos, promedioDias, combinacionMasComun, diaMasActivo } = statsData;
+                
+                // Actualizar calidad de datos
+                document.getElementById('quality-percentage').textContent = `${calidadDatos.porcentaje}%`;
+                const qualityBar = document.getElementById('quality-indicator-bar');
+                qualityBar.style.width = `${calidadDatos.porcentaje}%`;
+                
+                // Aplicar color según el porcentaje
+                if (calidadDatos.porcentaje >= 80) {
+                    qualityBar.className = 'quality-fill quality-good';
+                } else if (calidadDatos.porcentaje >= 60) {
+                    qualityBar.className = 'quality-fill quality-medium';
+                } else {
+                    qualityBar.className = 'quality-fill quality-poor';
+                }
+                
+                // Actualizar otras estadísticas
+                document.getElementById('avg-days').textContent = promedioDias;
+                document.getElementById('active-day').textContent = diaMasActivo;
+                document.getElementById('common-combination').textContent = 
+                    combinacionMasComun.length > 15 ? 
+                    combinacionMasComun.substring(0, 15) + '...' : 
+                    combinacionMasComun;
+                
+                // Mostrar el grid de estadísticas rápidas
+                statsGrid.style.display = 'grid';
+            }
 
             // -------------------------------------------------------------------
-            // NUEVAS FUNCIONES PARA GENERAR Y MOSTRAR TABLAS
+            // FUNCIONES PARA GENERAR Y MOSTRAR TABLAS
             // -------------------------------------------------------------------
             
             // Función auxiliar para generar la tabla HTML de una estadística
@@ -542,14 +947,69 @@
                 return tableHTML;
             }
             
+            // Función para generar tabla de relación modo-estado
+            function generarTablaRelacion(titulo, relacionModoEstado, total) {
+                let tableHTML = `
+                    <div class="print-table-container">
+                        <h3>${titulo} (${total} Casos)</h3>
+                        <table class="statistical-table">
+                            <thead>
+                                <tr>
+                                    <th>Modo de Intervención</th>
+                `;
+                
+                // Obtener todos los estados únicos
+                const estados = new Set();
+                Object.values(relacionModoEstado).forEach(estadosModo => {
+                    Object.keys(estadosModo).forEach(estado => estados.add(estado));
+                });
+                const estadosArray = Array.from(estados);
+                
+                // Encabezados de columnas (estados)
+                estadosArray.forEach(estado => {
+                    tableHTML += `<th>${estado}</th>`;
+                });
+                tableHTML += `<th>Total</th>`;
+                tableHTML += `</tr></thead><tbody>`;
+                
+                // Filas de datos
+                Object.keys(relacionModoEstado).forEach(modo => {
+                    tableHTML += `<tr><td>${modo}</td>`;
+                    let totalModo = 0;
+                    
+                    estadosArray.forEach(estado => {
+                        const cantidad = relacionModoEstado[modo][estado] || 0;
+                        tableHTML += `<td>${cantidad}</td>`;
+                        totalModo += cantidad;
+                    });
+                    
+                    tableHTML += `<td><strong>${totalModo}</strong></td></tr>`;
+                });
+                
+                // Fila de totales
+                tableHTML += `<tr><td><strong>Total</strong></td>`;
+                estadosArray.forEach(estado => {
+                    let totalEstado = 0;
+                    Object.keys(relacionModoEstado).forEach(modo => {
+                        totalEstado += relacionModoEstado[modo][estado] || 0;
+                    });
+                    tableHTML += `<td><strong>${totalEstado}</strong></td>`;
+                });
+                tableHTML += `<td><strong>${total}</strong></td></tr>`;
+                
+                tableHTML += `</tbody></table></div>`;
+                return tableHTML;
+            }
+            
             // Función principal para generar el contenedor de tablas
             function generarContenidoTablas(statsData) {
-                const { statsModo, statsEstado, statsAnual, dataTotal } = statsData;
+                const { statsModo, statsEstado, statsAnual, relacionModoEstado, dataTotal } = statsData;
                 
                 let tablasHTML = '';
 
                 tablasHTML += generarTablaHTML("Estadística por Modo de Intervención", statsModo, dataTotal);
                 tablasHTML += generarTablaHTML("Estadística por Estado de Control", statsEstado, dataTotal);
+                tablasHTML += generarTablaRelacion("Relación: Modo de Intervención vs Estado de Control", relacionModoEstado, dataTotal);
                 tablasHTML += generarTablaHTML("Estadística de Distribución Anual", statsAnual, dataTotal);
                 
                 return tablasHTML;

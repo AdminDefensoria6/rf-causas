@@ -214,7 +214,7 @@
         /* Estilos específicos para la impresión de tablas */
         .print-table-container {
             margin-bottom: 30px;
-            page-break-inside: avoid; /* Evita que la tabla se rompa en una página */
+            page-break-inside: avoid;
         }
         .print-table-container h3 {
             color: #1e293b;
@@ -529,7 +529,15 @@
                 appId: "1:132961250045:web:bda0f739c463217a056c94"
             };
 
-            firebase.initializeApp(firebaseConfig);
+            // Inicializar Firebase
+            try {
+                firebase.initializeApp(firebaseConfig);
+            } catch (error) {
+                console.error("Error inicializando Firebase:", error);
+                document.getElementById('loading-status').textContent = "Error inicializando Firebase. Verifica la configuración.";
+                return;
+            }
+            
             const db = firebase.firestore();
             const loadingStatus = document.getElementById('loading-status');
             const printButton = document.getElementById('print-stats-button');
@@ -550,7 +558,18 @@
                 errorMessage.style.display = 'none';
                 
                 try {
+                    console.log("Conectando a Firebase...");
                     const querySnapshot = await db.collection('expedientes').get();
+                    
+                    if (querySnapshot.empty) {
+                        loadingStatus.textContent = 'No se encontraron expedientes en la base de datos.';
+                        errorMessage.textContent = 'No se encontraron expedientes en la base de datos. Verifica que la colección "expedientes" exista y tenga documentos.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    console.log(`Se encontraron ${querySnapshot.size} documentos.`);
+                    
                     cachedExpedientesData = querySnapshot.docs.map(doc => {
                         const data = doc.data();
                         // Validación básica de datos
@@ -559,8 +578,12 @@
                         return data;
                     });
                     
+                    console.log("Datos cargados correctamente:", cachedExpedientesData.length, "expedientes");
+                    
                     if (cachedExpedientesData.length === 0) {
                         loadingStatus.textContent = 'No se encontraron expedientes para mostrar estadísticas.';
+                        errorMessage.textContent = 'No se encontraron expedientes para mostrar estadísticas.';
+                        errorMessage.style.display = 'block';
                         return;
                     }
                     
@@ -578,7 +601,7 @@
                 } catch (error) {
                     console.error("Error al cargar datos:", error);
                     loadingStatus.textContent = `Error al conectar con la base de datos: ${error.message}`;
-                    errorMessage.textContent = `Error al cargar datos: ${error.message}. Por favor, recarga la página.`;
+                    errorMessage.textContent = `Error al cargar datos: ${error.message}. Verifica tu conexión a Internet y que la configuración de Firebase sea correcta.`;
                     errorMessage.style.display = 'block';
                 }
             }
@@ -589,9 +612,9 @@
                 const modoPorFecha = {};
                 const estadoPorFecha = {};
                 const statsAnual = {};
-                const relacionModoEstado = {}; // Nueva: relación entre modo y estado
-                const statsDiasSemana = Array(5).fill(0); // Cambiado a 5 para Lunes a Viernes
-                const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']; // Solo días laborables
+                const relacionModoEstado = {};
+                const statsDiasSemana = Array(5).fill(0);
+                const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
                 
                 // Variables para estadísticas de calidad
                 let datosCompletos = 0;
@@ -639,14 +662,13 @@
                             if (!estadoPorFecha[claveFecha]) estadoPorFecha[claveFecha] = {};
                             estadoPorFecha[claveFecha][estado] = (estadoPorFecha[claveFecha][estado] || 0) + 1;
                             
-                            // Análisis por día de la semana (solo Lunes a Viernes)
+                            // Análisis por día de la semana
                             try {
                                 const fecha = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
                                 if (!isNaN(fecha.getTime())) {
-                                    const diaSemana = fecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-                                    // Solo contamos Lunes (1) a Viernes (5)
+                                    const diaSemana = fecha.getDay();
                                     if (diaSemana >= 1 && diaSemana <= 5) {
-                                        statsDiasSemana[diaSemana - 1]++; // Restamos 1 para que Lunes sea índice 0
+                                        statsDiasSemana[diaSemana - 1]++;
                                     }
                                 }
                             } catch (e) {
@@ -705,7 +727,7 @@
                 // Encontrar combinación más común
                 const combinacionMasComun = encontrarCombinacionMasComun(relacionModoEstado);
                 
-                // Encontrar día más activo (solo entre Lunes y Viernes)
+                // Encontrar día más activo
                 let diaMasActivoIndex = 0;
                 let maxAsignaciones = 0;
                 statsDiasSemana.forEach((count, index) => {
@@ -720,7 +742,6 @@
                     labelsModo, countModo, labelsEstado, countEstado, 
                     labelsFechas: labelsFechasFormateados, datasetsModo, datasetsEstado,
                     labelsAnual, countAnual, dataTotal: data.length,
-                    // Nuevos datos
                     relacionData,
                     statsDiasSemana,
                     diasSemana,
@@ -747,7 +768,6 @@
             }
             
             function prepararDatosRelacion(relacionModoEstado, labelsModo, labelsEstado) {
-                // Preparar datos para gráfico de barras agrupadas
                 const datasets = [];
                 
                 labelsEstado.forEach((estado, index) => {
@@ -787,7 +807,10 @@
                 // Destruir gráficos existentes antes de crear nuevos
                 ['chartModoIntervencion', 'lineChartModoIntervencion', 'chartControlSecretario', 
                  'lineChartEstadoControl', 'chartDistribucionAnual', 'chartRelacionModoEstado', 
-                 'chartDiasSemana'].forEach(id => Chart.getChart(id)?.destroy());
+                 'chartDiasSemana'].forEach(id => {
+                    const chart = Chart.getChart(id);
+                    if (chart) chart.destroy();
+                });
 
                 const { 
                     statsModo, statsEstado, statsAnual,
@@ -807,12 +830,11 @@
                 crearGraficoLineal('lineChartEstadoControl', labelsFechas, datasetsEstado);
                 mostrarDetalles('detailsControlSecretario', statsEstado, "Estado predominante");
                 
-                // Sección 3: Relación Modo-Estado (NUEVA)
+                // Sección 3: Relación Modo-Estado
                 crearGraficoBarrasAgrupadas('chartRelacionModoEstado', relacionData);
                 mostrarDetallesRelacion('detailsRelacionModoEstado', statsData.relacionModoEstado);
                 
-                // Sección 4: Días de la Semana (NUEVA) - Solo Lunes a Viernes
-                // CORRECCIÓN: Usar el total de casos (394) para calcular los porcentajes
+                // Sección 4: Días de la Semana
                 crearGraficoBarras('chartDiasSemana', diasSemana, statsDiasSemana, COLORS_DIAS);
                 mostrarDetallesDiasSemana('detailsDiasSemana', statsDiasSemana, diasSemana, dataTotal);
                 
@@ -975,7 +997,6 @@
                 html += '<p><strong>Distribución por día:</strong></p>';
                 
                 statsDiasSemana.forEach((count, index) => {
-                    // CORRECCIÓN: Usar el total de casos (394) para calcular porcentajes
                     const porcentaje = totalCasos > 0 ? ((count / totalCasos) * 100).toFixed(1) : 0;
                     html += `<p>${diasSemana[index]}: ${count} (${porcentaje}%)</p>`;
                 });
@@ -1078,7 +1099,7 @@
                 // Tabla de Días de la Semana
                 if (allStatsData.statsDiasSemana && allStatsData.diasSemana) {
                     let tablaDias = '<div class="print-table-container"><h3>Distribución por Día de la Semana</h3><table class="statistical-table"><thead><tr><th>Día</th><th>Cantidad</th><th>Porcentaje</th></tr></thead><tbody>';
-                    const totalDias = allStatsData.dataTotal; // Usar el total de casos (394)
+                    const totalDias = allStatsData.dataTotal;
                     
                     allStatsData.diasSemana.forEach((dia, index) => {
                         const cantidad = allStatsData.statsDiasSemana[index];

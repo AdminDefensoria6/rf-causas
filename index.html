@@ -905,7 +905,7 @@
                     <option value="Patrocinante Demandado">Patrocinante Demandado</option>
                     <option value="Patrocinante Tercero">Patrocinante Tercero</option>
                     <option value="Defensor de Ausente">Defensor de Ausente</option>
-                    <option value="Defensor MPC Incapaz">Defensor MPC incapaz</option>
+                    <option value="Defensor MPC Incapaz">Defensor MPC Incapaz</option>
                     <option value="Asesor de incapaces">Asesor de incapaces</option>
                 </select>
             </div>
@@ -1531,20 +1531,60 @@
             controles.appendChild(btnSiguiente);
         }
         
-        // Función para imprimir el listado completo de expedientes
-        function imprimirListadoCompleto() {
+        // Función para imprimir listado de expedientes (filtrados o completos)
+        function imprimirListado() {
             // Crear una ventana nueva para imprimir
             const ventanaImpresion = window.open('', '_blank');
             
-            // Obtener todos los expedientes sin filtrar
-            const expedientesCompletos = [...expedientes];
+            // Obtener los expedientes filtrados actualmente
+            const expedientesFiltrados = expedientes.filter(exp => {
+                const searchText = searchInput.value.toLowerCase();
+                const selectedMonth = monthFilter.value;
+                const selectedYear = yearFilter.value;
+                const selectedSignature = signatureFilter.value;
+                const selectedControl = controlFilter.value;
+                const selectedJuzgado = juzgadoFilter.value;
+                const selectedIntervencion = intervencionFilter.value;
+                
+                // Aplicar los mismos filtros que en la tabla
+                if (searchText && 
+                    !(exp.numeroYAnio?.toLowerCase().includes(searchText) ||
+                      exp.descripcion?.toLowerCase().includes(searchText) ||
+                      exp.caratula?.toLowerCase().includes(searchText))) {
+                    return false;
+                }
+                
+                const fechaParts = exp.fechaPase ? exp.fechaPase.split('/') : [];
+                if (fechaParts.length === 3) {
+                    if (selectedMonth && fechaParts[1] !== selectedMonth) return false;
+                    if (selectedYear && fechaParts[2] !== selectedYear) return false;
+                } else if (selectedMonth || selectedYear) {
+                    return false;
+                }
+                
+                if (selectedSignature) {
+                    const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
+                    if (recordSignature !== selectedSignature) return false;
+                }
+                
+                if (selectedControl && exp.controlSecretario !== selectedControl) return false;
+                if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
+                if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
+                
+                return true;
+            });
+            
+            // Determinar si hay filtros activos
+            const hayFiltros = searchInput.value || monthFilter.value || yearFilter.value || 
+                               signatureFilter.value || controlFilter.value || 
+                               juzgadoFilter.value || intervencionFilter.value;
             
             // Crear el contenido HTML para la impresión
             let contenidoHTML = `
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Listado Completo de Expedientes</title>
+                    <title>Listado de Expedientes</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -1555,6 +1595,13 @@
                             text-align: center;
                             color: #0f4c75;
                             margin-bottom: 20px;
+                        }
+                        .info-filtros {
+                            background-color: #f0f0f0;
+                            padding: 10px;
+                            margin-bottom: 15px;
+                            border-radius: 5px;
+                            font-size: 11px;
                         }
                         table {
                             width: 100%;
@@ -1578,7 +1625,27 @@
                     </style>
                 </head>
                 <body>
-                    <h1>Listado Completo de Expedientes</h1>
+                    <h1>Listado de Expedientes ${hayFiltros ? '(Filtrados)' : '(Completo)'}</h1>
+            `;
+            
+            // Agregar información sobre filtros aplicados si los hay
+            if (hayFiltros) {
+                contenidoHTML += `
+                    <div class="info-filtros">
+                        <strong>Filtros aplicados:</strong><br>
+                        ${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}
+                        ${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}
+                        ${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}
+                        ${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}
+                        ${controlFilter.value ? `Control: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}
+                        ${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}
+                        ${intervencionFilter.value ? `Intervención: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}
+                        <strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong>
+                    </div>
+                `;
+            }
+            
+            contenidoHTML += `
                     <table>
                         <thead>
                             <tr>
@@ -1594,8 +1661,8 @@
             `;
             
             // Agregar cada expediente a la tabla
-            expedientesCompletos.forEach((exp, index) => {
-                const numeroDescendente = expedientesCompletos.length - index;
+            expedientesFiltrados.forEach((exp, index) => {
+                const numeroDescendente = expedientesFiltrados.length - index;
                 
                 let observacionesTexto = '';
                 if (exp.notas && exp.notas.length > 0) {
@@ -1976,8 +2043,8 @@
             registroCancelarBtn.addEventListener('click', cerrarModalRegistro);
             registroGuardarBtn.addEventListener('click', guardarExpediente);
             
-            // Reemplazar la función de impresión anterior
-            printBtn.addEventListener('click', imprimirListadoCompleto);
+            // Usar la nueva función de impresión
+            printBtn.addEventListener('click', imprimirListado);
             
             reporteBtn.addEventListener('click', () => {
                 window.open('https://admindefensoria6.github.io/rf-causas/reporte.html', '_blank');

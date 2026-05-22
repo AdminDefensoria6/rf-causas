@@ -1040,7 +1040,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT ORIGINAL CON MODIFICACIÓN DE AUDIO -->
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
@@ -1125,19 +1124,6 @@
         let paginaActualTabla = 1;
         const registrosPorPagina = 10;
 
-        // --- AUDIO PARA MODAL DE SALIDA ---
-        let audioSalida = null;
-
-        function reproducirAudioSalida() {
-            // Si ya existe una instancia, la detenemos y recreamos para permitir múltiples reproducciones
-            if (audioSalida) {
-                audioSalida.pause();
-                audioSalida.currentTime = 0;
-            }
-            audioSalida = new Audio('https://github.com/AdminDefensoria6/rf-causas/raw/refs/heads/main/salida.mp3');
-            audioSalida.play().catch(e => console.warn('Audio de salida no pudo reproducirse:', e));
-        }
-
         // ==========================================
         // GUARDIÁN DE RUTA Y CERRAR SESIÓN
         // ==========================================
@@ -1152,7 +1138,6 @@
         });
 
         logoutBtn.addEventListener('click', () => {
-            reproducirAudioSalida();   // Reproducir sonido al abrir el modal
             logoutAlertModal.style.display = 'flex';
         });
 
@@ -1226,7 +1211,7 @@
                 mostrarExpedientesEnTabla();
             } catch (error) {
                 console.error('Error al cargar expedientes:', error);
-                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Error al cargar los expedientes (Verifica los permisos de Firebase)</td></tr>`; 
+                expedientesTbody.innerHTML = `<table><td colspan="7" style="text-align: center; color: red;">Error al cargar los expedientes (Verifica los permisos de Firebase)</td></tr>`; 
             }
         }
 
@@ -1460,7 +1445,7 @@
                 contenidoHTML += `<div class="info-filtros"><strong>Filtros aplicados:</strong><br>${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}${controlFilter.value ? `Control: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}${intervencionFilter.value ? `Intervención: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}<strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong></div>`;
             }
             
-            contenidoHTML += `</table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th></tr></thead><tbody>`;
+            contenidoHTML += `<table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th></tr></thead><tbody>`;
             
             expedientesFiltrados.forEach((exp, index) => {
                 const numeroDescendente = expedientesFiltrados.length - index;
@@ -1770,7 +1755,7 @@
 
             cerrarReporteBtn.addEventListener('click', () => {
                 vistaReporte.style.display = 'none';
-                vistaPrincipal.style.display = 'flex'; // Cambiado de block a flex por el nuevo layout
+                vistaPrincipal.style.display = 'flex';
             });
             
             nuevoBtn.addEventListener('click', () => abrirModalRegistro());

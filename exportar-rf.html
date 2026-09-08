@@ -53,12 +53,10 @@
             padding: 20px;
         }
 
-        /* Página de aplicación */
         #pagina-app {
             display: none; 
         }
 
-        /* Encabezado */
         .app-header {
             display: flex;
             justify-content: space-between;
@@ -68,6 +66,8 @@
             background: var(--surface);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .app-title {
@@ -81,6 +81,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .user-greeting {
@@ -99,6 +100,7 @@
             font-size: 0.95rem;
             transition: all 0.2s ease;
             box-shadow: var(--shadow-sm);
+            white-space: nowrap;
         }
 
         .btn-success { background-color: var(--success); color: white; }
@@ -116,7 +118,31 @@
         .btn-export { background-color: #8b5cf6; color: white; }
         .btn-export:hover { background-color: #7c3aed; }
 
-        /* Estructura Principal (Grid/Flex Layout) */
+        .btn-import { background-color: #f59e0b; color: white; }
+        .btn-import:hover { background-color: #d97706; }
+
+        .btn-firestore { background-color: #3b82f6; color: white; }
+        .btn-firestore:hover { background-color: #2563eb; }
+        .btn-firestore-off { background-color: #6b7280; color: white; }
+        .btn-firestore-off:hover { background-color: #4b5563; }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-success-sm { background-color: #d1fae5; color: #065f46; }
+        .btn-danger-sm { background-color: #fee2e2; color: #991b1b; }
+        .btn-info { background-color: #e0f2fe; color: #0369a1; }
+        .btn-info:hover { background-color: #bae6fd; }
+        .btn-warning { background-color: #fef3c7; color: #92400e; }
+        .btn-warning:hover { background-color: #fde68a; }
+
         .main-layout {
             display: flex;
             gap: 25px;
@@ -125,7 +151,7 @@
 
         .table-section {
             flex: 1;
-            min-width: 0; /* Previene overflow en flexbox */
+            min-width: 0;
         }
 
         .filters-section {
@@ -148,7 +174,6 @@
             font-weight: 600;
         }
 
-        /* Panel de filtros */
         .filters {
             display: flex;
             flex-direction: column;
@@ -173,7 +198,6 @@
             box-shadow: 0 0 0 3px rgba(15, 76, 117, 0.15);
         }
 
-        /* Tabla de expedientes */
         .table-container {
             background-color: var(--surface);
             border-radius: var(--radius-lg);
@@ -220,26 +244,9 @@
             flex-wrap: wrap;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-success-sm { background-color: #d1fae5; color: #065f46; }
-        .btn-danger-sm { background-color: #fee2e2; color: #991b1b; }
-        .btn-info { background-color: #e0f2fe; color: #0369a1; }
-        .btn-info:hover { background-color: #bae6fd; }
-        .btn-warning { background-color: #fef3c7; color: #92400e; }
-        .btn-warning:hover { background-color: #fde68a; }
         .btn-danger.eliminar-btn { background-color: #fee2e2; color: #991b1b; }
         .btn-danger.eliminar-btn:hover { background-color: #fecaca; }
 
-        /* Modales */
         .modal {
             display: none;
             position: fixed;
@@ -319,7 +326,6 @@
             max-width: 850px;
         }
 
-        /* Detalles Ver Modal */
         .info-group {
             margin-bottom: 15px;
             padding-bottom: 15px;
@@ -343,7 +349,6 @@
             font-weight: 500;
         }
 
-        /* Formularios */
         .form-group {
             margin-bottom: 20px;
         }
@@ -388,7 +393,6 @@
             flex: 1;
         }
 
-        /* Tabs Modernos */
         .tabs {
             display: flex;
             gap: 5px;
@@ -436,13 +440,11 @@
 
         .conditional-field { display: none; margin-top: 15px; padding-left: 15px; border-left: 3px solid var(--primary); }
 
-        /* Notas */
         .notas-table th { background-color: #f8fafc; }
         .agregar-nota { display: flex; gap: 15px; margin-top: 20px; }
         .agregar-nota input { flex: 1; }
         .agregar-nota button { flex-shrink: 0; }
 
-        /* Paginación Tablas */
         .tabla-paginacion {
             display: flex;
             justify-content: space-between;
@@ -473,7 +475,6 @@
         .tabla-paginacion-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
         .tabla-paginacion-btn:disabled { background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
 
-        /* Alertas visuales Toast */
         .visual-alert {
             position: fixed;
             top: 20px;
@@ -491,6 +492,7 @@
         
         .alert-success { background-color: #ecfdf5; color: #065f46; border-left: 4px solid var(--success); }
         .alert-danger { background-color: #fef2f2; color: #991b1b; border-left: 4px solid var(--danger); }
+        .alert-info { background-color: #eff6ff; color: #1e40af; border-left: 4px solid var(--info); }
         
         .error-message { color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: none; }
         
@@ -499,7 +501,6 @@
             background: transparent; bottom: 0; color: transparent; cursor: pointer; height: auto; left: 0; position: absolute; right: 0; top: 0; width: auto;
         }
 
-        /* Modal de Alerta Pequeño */
         #alert-modal .modal-content, #logout-alert-modal .modal-content {
             border-top: 5px solid var(--danger);
         }
@@ -512,7 +513,6 @@
             color: #991b1b;
         }
 
-        /* Responsive Layout */
         @media (max-width: 1024px) {
             .main-layout {
                 flex-direction: column;
@@ -535,12 +535,10 @@
         @media (max-width: 768px) {
             .app-header {
                 flex-direction: column;
-                gap: 15px;
                 align-items: stretch;
             }
             .header-buttons {
-                flex-wrap: wrap;
-                justify-content: space-between;
+                justify-content: center;
             }
             .user-greeting { width: 100%; text-align: center; margin-bottom: 10px; }
             .form-row { flex-direction: column; gap: 0; }
@@ -572,6 +570,17 @@
                     <button class="btn btn-success" id="nuevo-btn">Nuevo Expediente</button>
                     <button class="btn btn-secondary" id="reporte-btn">Reporte</button>
                     <button class="btn btn-secondary" id="print-btn">Imprimir Listado</button>
+                    
+                    <!-- Botón Importar JSON -->
+                    <button class="btn btn-import" id="import-json-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16" style="margin-right: 6px; vertical-align: middle;">
+                            <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707V11.5z"/>
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                        </svg>
+                        Importar JSON
+                    </button>
+                    <input type="file" id="import-json-input" accept=".json" style="display: none;">
+
                     <!-- Botón Exportar JSON -->
                     <button class="btn btn-export" id="export-json-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16" style="margin-right: 6px; vertical-align: middle;">
@@ -580,6 +589,10 @@
                         </svg>
                         Exportar JSON
                     </button>
+
+                    <!-- Botón Conectar/Desconectar Firestore -->
+                    <button class="btn btn-firestore" id="toggle-firestore-btn">Conectar a Firestore</button>
+
                     <button class="btn btn-danger" id="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
@@ -1052,7 +1065,9 @@
     </div>
 
     <script>
-        // Configuración de Firebase
+        // ============================================================
+        // CONFIGURACIÓN FIREBASE (solo para autenticación y Firestore)
+        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyAcylOv_wDD16HbYoTLvYj_Beaa1_MON0I",
             authDomain: "causasasignadas-def.firebaseapp.com",
@@ -1062,12 +1077,25 @@
             appId: "1:132961250045:web:bda0f739c463217a056c94"
         };
 
-        // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const auth = firebase.auth(); 
+        const auth = firebase.auth();
 
-        // Elementos DOM
+        // ============================================================
+        // VARIABLES GLOBALES
+        // ============================================================
+        let datosLocales = [];          // Todos los expedientes en memoria
+        let conectadoFirestore = false; // Estado de conexión a Firestore
+        let expedienteEditando = null;  // Referencia al expediente que se está editando (objeto con id)
+        let notasTemporales = [];
+        let paginaActualNotas = 1;
+        const notasPorPagina = 5;
+        let paginaActualTabla = 1;
+        const registrosPorPagina = 10;
+
+        // ============================================================
+        // REFERENCIAS DOM
+        // ============================================================
         const paginaApp = document.getElementById('pagina-app');
         const loadingScreen = document.getElementById('loading-screen');
         const expedientesTbody = document.getElementById('expedientes-tbody');
@@ -1078,8 +1106,11 @@
         const printBtn = document.getElementById('print-btn');
         const reporteBtn = document.getElementById('reporte-btn');
         const nuevoBtn = document.getElementById('nuevo-btn');
-        const logoutBtn = document.getElementById('logout-btn'); 
+        const logoutBtn = document.getElementById('logout-btn');
         const exportJsonBtn = document.getElementById('export-json-btn');
+        const importJsonBtn = document.getElementById('import-json-btn');
+        const importJsonInput = document.getElementById('import-json-input');
+        const toggleFirestoreBtn = document.getElementById('toggle-firestore-btn');
         const searchInput = document.getElementById('search');
         const monthFilter = document.getElementById('month-filter');
         const yearFilter = document.getElementById('year-filter');
@@ -1087,13 +1118,10 @@
         const controlFilter = document.getElementById('control-filter');
         const juzgadoFilter = document.getElementById('juzgado-filter');
         const intervencionFilter = document.getElementById('intervencion-filter');
-        
-        // Elementos DOM integracion reporte
         const vistaPrincipal = document.getElementById('vista-principal');
         const vistaReporte = document.getElementById('vista-reporte');
         const reporteIframe = document.getElementById('reporte-iframe');
         const cerrarReporteBtn = document.getElementById('cerrar-reporte-btn');
-        
         const registroCancelarBtn = document.getElementById('registro-cancelar-btn');
         const registroGuardarBtn = document.getElementById('registro-guardar-btn');
         const registroModalTitle = document.getElementById('registro-modal-title');
@@ -1116,60 +1144,16 @@
         const agregarNotaBtn = document.getElementById('agregar-nota-btn');
         const infoPaginacion = document.getElementById('info-paginacion');
         const controlesPaginacion = document.getElementById('controles-paginacion');
-
         const alertModal = document.getElementById('alert-modal');
         const alertModalMessage = document.getElementById('alert-modal-message');
-
-        // Referencia para el modal de advertencia de salida
         const logoutAlertModal = document.getElementById('logout-alert-modal');
         const logoutCloseBtn = document.getElementById('logout-close-btn');
         const logoutCancelBtn = document.getElementById('logout-cancel-btn');
         const logoutConfirmBtn = document.getElementById('logout-confirm-btn');
 
-        // Variables de estado
-        let expedientes = [];
-        let expedienteEditando = null;
-        let notasTemporales = [];
-        let paginaActualNotas = 1;
-        const notasPorPagina = 5;
-        
-        let paginaActualTabla = 1;
-        const registrosPorPagina = 10;
-
-        // ==========================================
-        // GUARDIÁN DE RUTA Y CERRAR SESIÓN
-        // ==========================================
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.replace('index.html');
-            } else {
-                loadingScreen.style.display = 'none';
-                paginaApp.style.display = 'block';
-                cargarExpedientes();
-            }
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            logoutAlertModal.style.display = 'flex';
-        });
-
-        logoutCloseBtn.addEventListener('click', () => {
-            logoutAlertModal.style.display = 'none';
-        });
-        logoutCancelBtn.addEventListener('click', () => {
-            logoutAlertModal.style.display = 'none';
-        });
-
-        logoutConfirmBtn.addEventListener('click', () => {
-            logoutAlertModal.style.display = 'none';
-            auth.signOut().then(() => {
-            }).catch((error) => {
-                console.error('Error al cerrar sesión:', error);
-                mostrarAlerta('Error al cerrar sesión', 'danger');
-            });
-        });
-
-        // --- Funciones de Utilidad ---
+        // ============================================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================================
         function formatearFecha(fecha) {
             if (!fecha || typeof fecha !== 'string') return '';
             const partes = fecha.split('-');
@@ -1187,15 +1171,13 @@
             }
             return fecha;
         }
-        
+
         function mostrarAlerta(mensaje, tipo = 'success') {
             const alerta = document.createElement('div');
             alerta.className = `visual-alert alert-${tipo}`;
             alerta.textContent = mensaje;
             document.body.appendChild(alerta);
-
             setTimeout(() => alerta.classList.add('show'), 10);
-
             setTimeout(() => {
                 alerta.classList.remove('show');
                 alerta.addEventListener('transitionend', () => alerta.remove());
@@ -1206,46 +1188,25 @@
             alertModalMessage.textContent = mensaje;
             alertModal.style.display = 'flex';
         }
-        
-        // --- Lógica de la Aplicación ---
-        async function cargarExpedientes() {
-            try {
-                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">Cargando expedientes...</td></tr>`; 
-                const querySnapshot = await db.collection('expedientes').get();
-                expedientes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                expedientes.sort((a, b) => {
-                     const fechaA = new Date(formatearFechaParaInput(a.fechaPase));
-                     const fechaB = new Date(formatearFechaParaInput(b.fechaPase));
-                     return fechaB - fechaA; 
-                });
 
-                mostrarExpedientesEnTabla();
-            } catch (error) {
-                console.error('Error al cargar expedientes:', error);
-                expedientesTbody.innerHTML = `<table><td colspan="7" style="text-align: center; color: red;">Error al cargar los expedientes (Verifica los permisos de Firebase)</td></tr>`; 
-            }
-        }
+        // ============================================================
+        // FUNCIONES DE MANEJO DE DATOS LOCALES
+        // ============================================================
+        function obtenerExpedientesFiltrados() {
+            const searchText = searchInput.value.toLowerCase();
+            const selectedMonth = monthFilter.value;
+            const selectedYear = yearFilter.value;
+            const selectedSignature = signatureFilter.value;
+            const selectedControl = controlFilter.value;
+            const selectedJuzgado = juzgadoFilter.value;
+            const selectedIntervencion = intervencionFilter.value;
 
-        function mostrarExpedientesEnTabla() {
-            expedientesTbody.innerHTML = '';
-            
-            const expedientesFiltrados = expedientes.filter(exp => {
-                const searchText = searchInput.value.toLowerCase();
-                const selectedMonth = monthFilter.value;
-                const selectedYear = yearFilter.value;
-                const selectedSignature = signatureFilter.value;
-                const selectedControl = controlFilter.value;
-                const selectedJuzgado = juzgadoFilter.value;
-                const selectedIntervencion = intervencionFilter.value;
-                
-                if (searchText && 
-                    !(exp.numeroYAnio?.toLowerCase().includes(searchText) ||
-                      exp.descripcion?.toLowerCase().includes(searchText) ||
-                      exp.caratula?.toLowerCase().includes(searchText))) {
+            return datosLocales.filter(exp => {
+                if (searchText && !(exp.numeroYAnio?.toLowerCase().includes(searchText) ||
+                                    exp.descripcion?.toLowerCase().includes(searchText) ||
+                                    exp.caratula?.toLowerCase().includes(searchText))) {
                     return false;
                 }
-                
                 const fechaParts = exp.fechaPase ? exp.fechaPase.split('/') : [];
                 if (fechaParts.length === 3) {
                     if (selectedMonth && fechaParts[1] !== selectedMonth) return false;
@@ -1253,38 +1214,38 @@
                 } else if (selectedMonth || selectedYear) {
                     return false;
                 }
-                
                 if (selectedSignature) {
                     const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
                     if (recordSignature !== selectedSignature) return false;
                 }
-                
                 if (selectedControl && exp.controlSecretario !== selectedControl) return false;
                 if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
                 if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
-                
                 return true;
             });
-            
+        }
+
+        function mostrarExpedientesEnTabla() {
+            expedientesTbody.innerHTML = '';
+            const expedientesFiltrados = obtenerExpedientesFiltrados();
             const totalExpedientes = expedientesFiltrados.length;
             const totalPaginas = Math.ceil(totalExpedientes / registrosPorPagina);
-            
+
             if (paginaActualTabla > totalPaginas) {
                 paginaActualTabla = Math.max(1, totalPaginas);
             }
-            
+
             const inicio = (paginaActualTabla - 1) * registrosPorPagina;
             const fin = inicio + registrosPorPagina;
             const expedientesPagina = expedientesFiltrados.slice(inicio, fin);
-            
+
             if (expedientesPagina.length === 0) {
-                const message = expedientes.length === 0 ? "No hay expedientes registrados" : "No se encontraron expedientes con los filtros aplicados.";
-                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">${message}</td></tr>`; 
+                const message = datosLocales.length === 0 ? "No hay expedientes registrados" : "No se encontraron expedientes con los filtros aplicados.";
+                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">${message}</td></tr>`;
             } else {
                 expedientesPagina.forEach((exp, index) => {
                     const row = expedientesTbody.insertRow();
-                    const numeroDescendente = totalExpedientes - inicio - index; 
-                    
+                    const numeroDescendente = totalExpedientes - inicio - index;
                     let observacionesTexto = '';
                     if (exp.notas && exp.notas.length > 0) {
                         const ultimaNota = exp.notas[exp.notas.length - 1];
@@ -1293,9 +1254,7 @@
                             observacionesTexto += ` (${exp.notas.length} notas)`;
                         }
                     }
-                    
                     const firmaDigital = exp.fechaFirmaDigital ? 'si' : 'no';
-                    
                     row.innerHTML = `
                         <td>${numeroDescendente}</td>
                         <td>${exp.fechaPase || 'N/A'}</td>
@@ -1315,36 +1274,30 @@
                     `;
                 });
             }
-            
+
             actualizarPaginacionTabla(totalExpedientes, totalPaginas);
         }
-        
+
         function actualizarPaginacionTabla(totalExpedientes, totalPaginas) {
             const inicio = (paginaActualTabla - 1) * registrosPorPagina + 1;
             const fin = Math.min(paginaActualTabla * registrosPorPagina, totalExpedientes);
-            
-            const infoTexto = totalExpedientes === 0 
-                ? 'No hay expedientes' 
-                : `Mostrando ${inicio}-${fin} de ${totalExpedientes} expedientes`;
-            
+            const infoTexto = totalExpedientes === 0 ? 'No hay expedientes' : `Mostrando ${inicio}-${fin} de ${totalExpedientes} expedientes`;
             document.getElementById('tabla-paginacion-info-superior').textContent = infoTexto;
             document.getElementById('tabla-paginacion-info-inferior').textContent = infoTexto;
-            
             actualizarControlesPaginacion('tabla-paginacion-controles-superior', totalPaginas);
             actualizarControlesPaginacion('tabla-paginacion-controles-inferior', totalPaginas);
         }
-        
+
         function actualizarControlesPaginacion(contenedorId, totalPaginas) {
             const controles = document.getElementById(contenedorId);
             controles.innerHTML = '';
-            
             if (totalPaginas <= 1) return;
-            
+
             const paginasPorGrupo = 5;
             const grupoActual = Math.ceil(paginaActualTabla / paginasPorGrupo);
             const primeraPaginaGrupo = (grupoActual - 1) * paginasPorGrupo + 1;
             const ultimaPaginaGrupo = Math.min(primeraPaginaGrupo + paginasPorGrupo - 1, totalPaginas);
-            
+
             const btnAnterior = document.createElement('button');
             btnAnterior.className = 'tabla-paginacion-btn';
             btnAnterior.innerHTML = '&laquo;';
@@ -1356,7 +1309,7 @@
                 }
             });
             controles.appendChild(btnAnterior);
-            
+
             if (primeraPaginaGrupo > 1) {
                 const btnAnteriorGrupo = document.createElement('button');
                 btnAnteriorGrupo.className = 'tabla-paginacion-btn';
@@ -1368,7 +1321,7 @@
                 });
                 controles.appendChild(btnAnteriorGrupo);
             }
-            
+
             for (let i = primeraPaginaGrupo; i <= ultimaPaginaGrupo; i++) {
                 const btnPagina = document.createElement('button');
                 btnPagina.className = `tabla-paginacion-btn ${i === paginaActualTabla ? 'active' : ''}`;
@@ -1379,7 +1332,7 @@
                 });
                 controles.appendChild(btnPagina);
             }
-            
+
             if (ultimaPaginaGrupo < totalPaginas) {
                 const btnSiguienteGrupo = document.createElement('button');
                 btnSiguienteGrupo.className = 'tabla-paginacion-btn';
@@ -1391,7 +1344,7 @@
                 });
                 controles.appendChild(btnSiguienteGrupo);
             }
-            
+
             const btnSiguiente = document.createElement('button');
             btnSiguiente.className = 'tabla-paginacion-btn';
             btnSiguiente.innerHTML = '&raquo;';
@@ -1404,113 +1357,129 @@
             });
             controles.appendChild(btnSiguiente);
         }
-        
-        function imprimirListado() {
-            const ventanaImpresion = window.open('', '_blank');
-            const expedientesFiltrados = expedientes.filter(exp => {
-                const searchText = searchInput.value.toLowerCase();
-                const selectedMonth = monthFilter.value;
-                const selectedYear = yearFilter.value;
-                const selectedSignature = signatureFilter.value;
-                const selectedControl = controlFilter.value;
-                const selectedJuzgado = juzgadoFilter.value;
-                const selectedIntervencion = intervencionFilter.value;
-                if (searchText && !(exp.numeroYAnio?.toLowerCase().includes(searchText) || exp.descripcion?.toLowerCase().includes(searchText) || exp.caratula?.toLowerCase().includes(searchText))) return false;
-                const fechaParts = exp.fechaPase ? exp.fechaPase.split('/') : [];
-                if (fechaParts.length === 3) {
-                    if (selectedMonth && fechaParts[1] !== selectedMonth) return false;
-                    if (selectedYear && fechaParts[2] !== selectedYear) return false;
-                } else if (selectedMonth || selectedYear) return false;
-                if (selectedSignature) {
-                    const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
-                    if (recordSignature !== selectedSignature) return false;
+
+        // ============================================================
+        // OPERACIONES CRUD (siempre locales, y si conectado, también Firestore)
+        // ============================================================
+        async function agregarExpedienteLocal(expedienteData) {
+            const nuevoId = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            expedienteData.id = nuevoId;
+            datosLocales.push(expedienteData);
+            if (conectadoFirestore) {
+                try {
+                    const docRef = await db.collection('expedientes').add(expedienteData);
+                    // Actualizar el ID local con el ID de Firestore
+                    const index = datosLocales.findIndex(e => e.id === nuevoId);
+                    if (index !== -1) {
+                        datosLocales[index].id = docRef.id;
+                    }
+                    mostrarAlerta('Expediente agregado a Firestore.', 'success');
+                } catch (error) {
+                    console.error('Error al agregar a Firestore:', error);
+                    mostrarAlerta('Error al sincronizar con Firestore.', 'danger');
                 }
-                if (selectedControl && exp.controlSecretario !== selectedControl) return false;
-                if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
-                if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
-                return true;
-            });
-            
-            const hayFiltros = searchInput.value || monthFilter.value || yearFilter.value || signatureFilter.value || controlFilter.value || juzgadoFilter.value || intervencionFilter.value;
-            
-            let contenidoHTML = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Listado de Expedientes</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; font-size: 12px; }
-                        h1 { text-align: center; color: #0f4c75; margin-bottom: 20px; }
-                        .info-filtros { background-color: #f0f0f0; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 11px; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-                        th { background-color: #f0f0f0; font-weight: bold; }
-                        tr:nth-child(even) { background-color: #f9f9f9; }
-                        .firma-digital { text-align: center; }
-                    </style>
-                </head>
-                <body>
-                    <h1>Listado de Expedientes ${hayFiltros ? '(Filtrados)' : '(Completo)'}</h1>
-            `;
-            
-            if (hayFiltros) {
-                contenidoHTML += `<div class="info-filtros"><strong>Filtros aplicados:</strong><br>${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}${controlFilter.value ? `Control: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}${intervencionFilter.value ? `Intervención: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}<strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong></div>`;
             }
-            
-            contenidoHTML += `<table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th></tr></thead><tbody>`;
-            
-            expedientesFiltrados.forEach((exp, index) => {
-                const numeroDescendente = expedientesFiltrados.length - index;
-                let observacionesTexto = '';
-                if (exp.notas && exp.notas.length > 0) {
-                    const ultimaNota = exp.notas[exp.notas.length - 1];
-                    observacionesTexto = `${ultimaNota.fecha}: ${ultimaNota.texto.substring(0, 30)}${ultimaNota.texto.length > 30 ? '...' : ''}`;
-                    if (exp.notas.length > 1) observacionesTexto += ` (${exp.notas.length} notas)`;
+            mostrarExpedientesEnTabla();
+        }
+
+        async function actualizarExpedienteLocal(id, expedienteData) {
+            const index = datosLocales.findIndex(e => e.id === id);
+            if (index !== -1) {
+                datosLocales[index] = { ...datosLocales[index], ...expedienteData };
+                if (conectadoFirestore) {
+                    try {
+                        await db.collection('expedientes').doc(id).update(expedienteData);
+                        mostrarAlerta('Expediente actualizado en Firestore.', 'success');
+                    } catch (error) {
+                        console.error('Error al actualizar en Firestore:', error);
+                        mostrarAlerta('Error al sincronizar con Firestore.', 'danger');
+                    }
                 }
-                const firmaDigital = exp.fechaFirmaDigital ? 'Sí' : 'No';
-                
-                contenidoHTML += `<tr><td>${numeroDescendente}</td><td>${exp.fechaPase || 'N/A'}</td><td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td><td>${exp.descripcion || 'N/A'}</td><td class="firma-digital">${firmaDigital}</td><td>${observacionesTexto}</td></tr>`;
-            });
-            
-            contenidoHTML += `</tbody></table><p style="text-align: right; margin-top: 20px; font-size: 10px;">Generado el ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}</p></body></html>`;
-            
-            ventanaImpresion.document.write(contenidoHTML);
-            ventanaImpresion.document.close();
-            
-            ventanaImpresion.onload = function() {
-                ventanaImpresion.focus();
-                ventanaImpresion.print();
-            };
-        }
-        
-        async function eliminarExpediente(id) {
-            try {
-                await db.collection('expedientes').doc(id).delete();
-                mostrarAlerta('Expediente eliminado correctamente.', 'success');
-                await cargarExpedientes();
-            } catch (error) {
-                console.error("Error al eliminar expediente: ", error);
-                mostrarAlerta('Error al eliminar el expediente.', 'danger');
-            }
-        }
-        
-        function actualizarEstadoFirma() {
-            const isCompleted = controlSecretarioSelect.value === 'Completado el control';
-            const firmaFields = [firmaSecretarioSelect, secretarioSelect, firmaDefensorSelect, subroganteTextoInput];
-            
-            firmaFields.forEach(field => field.disabled = !isCompleted);
-            
-            if (isCompleted) {
-                firmaSecretarioSelect.dispatchEvent(new Event('change'));
-            } else {
-                secretarioField.style.display = 'none';
-                firmaDefensorField.style.display = 'none';
-                subroganteField.style.display = 'none';
+                mostrarExpedientesEnTabla();
             }
         }
 
+        async function eliminarExpedienteLocal(id) {
+            const index = datosLocales.findIndex(e => e.id === id);
+            if (index !== -1) {
+                datosLocales.splice(index, 1);
+                if (conectadoFirestore) {
+                    try {
+                        await db.collection('expedientes').doc(id).delete();
+                        mostrarAlerta('Expediente eliminado de Firestore.', 'success');
+                    } catch (error) {
+                        console.error('Error al eliminar de Firestore:', error);
+                        mostrarAlerta('Error al sincronizar con Firestore.', 'danger');
+                    }
+                }
+                mostrarExpedientesEnTabla();
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES PARA MANEJO DE MODALES Y FORMULARIOS
+        // ============================================================
+        function limpiarFormularioRegistro() {
+            registroModal.querySelectorAll('input, textarea, select').forEach(el => {
+                if (el.type === 'select-one') el.selectedIndex = 0;
+                else el.value = '';
+            });
+            document.getElementById('fecha-pase').valueAsDate = new Date();
+            if (typeof fechaNotaInput !== 'undefined') fechaNotaInput.valueAsDate = new Date();
+            controlSecretarioSelect.value = 'Pendiente';
+            firmaSecretarioSelect.value = 'si';
+            secretarioSelect.value = 'Dra Patricia Soledad Riveros';
+            firmaDefensorSelect.value = 'Defensor Titular';
+            errorNumeroYAnio.style.display = 'none';
+        }
+
+        function abrirModalRegistro(id = null) {
+            if (id) {
+                expedienteEditando = datosLocales.find(exp => exp.id === id);
+                if (!expedienteEditando) return;
+                registroModalTitle.textContent = 'Editando Expediente';
+                numeroYAnioInput.value = expedienteEditando.numeroYAnio || '';
+                caratulaCausaInput.value = expedienteEditando.caratula || '';
+                document.getElementById('fecha-pase').value = formatearFechaParaInput(expedienteEditando.fechaPase);
+                document.getElementById('juzgado').value = expedienteEditando.juzgado || '';
+                document.getElementById('modo-intervencion').value = expedienteEditando.modoIntervencion || '';
+                document.getElementById('descripcion-tarea').value = expedienteEditando.descripcion || '';
+                controlSecretarioSelect.value = expedienteEditando.controlSecretario || 'Pendiente';
+                document.getElementById('fecha-firma-digital').value = formatearFechaParaInput(expedienteEditando.fechaFirmaDigital);
+                firmaSecretarioSelect.value = expedienteEditando.firmaSecretario || 'si';
+                if (expedienteEditando.firmaSecretario === 'si') {
+                    secretarioSelect.value = expedienteEditando.secretario || 'Dra Patricia Soledad Riveros';
+                } else {
+                    firmaDefensorSelect.value = expedienteEditando.firmaDefensor || 'Defensor Titular';
+                    if (expedienteEditando.firmaDefensor === 'Defensor Subrogante') {
+                        subroganteTextoInput.value = expedienteEditando.subroganteTexto || '';
+                    }
+                }
+                notasTemporales = expedienteEditando.notas ? [...expedienteEditando.notas] : [];
+            } else {
+                expedienteEditando = null;
+                registroModalTitle.textContent = 'Nuevo Expediente';
+                limpiarFormularioRegistro();
+                notasTemporales = [];
+            }
+            actualizarEstadoFirma();
+            paginaActualNotas = 1;
+            actualizarTablaNotas();
+            tabs[0].click();
+            registroModal.style.display = 'flex';
+        }
+
+        function cerrarModalRegistro() {
+            registroModal.style.display = 'none';
+            errorNumeroYAnio.style.display = 'none';
+        }
+
+        function cerrarModal() {
+            modal.style.display = 'none';
+        }
+
         function abrirModalVer(id) {
-            const expediente = expedientes.find(exp => exp.id === id);
+            const expediente = datosLocales.find(exp => exp.id === id);
             if (!expediente) return;
 
             document.getElementById('modal-numero-y-anio').textContent = expediente.numeroYAnio || 'N/A';
@@ -1531,11 +1500,9 @@
 
             const firmaDefensorGroup = document.getElementById('modal-firma-defensor-group');
             const subroganteGroup = document.getElementById('modal-subrogante-group');
-            
             if (expediente.firmaSecretario === 'no') {
                 firmaDefensorGroup.style.display = 'block';
                 document.getElementById('modal-firma-defensor').textContent = expediente.firmaDefensor;
-                
                 if (expediente.firmaDefensor === 'Defensor Subrogante') {
                     subroganteGroup.style.display = 'block';
                     document.getElementById('modal-subrogante').textContent = expediente.subroganteTexto || 'No especificado';
@@ -1546,63 +1513,20 @@
                 firmaDefensorGroup.style.display = 'none';
                 subroganteGroup.style.display = 'none';
             }
-            
             modal.style.display = 'flex';
         }
 
-        function limpiarFormularioRegistro() {
-            registroModal.querySelectorAll('input, textarea, select').forEach(el => {
-                if(el.type === 'select-one') el.selectedIndex = 0;
-                else el.value = '';
-            });
-            
-            document.getElementById('fecha-pase').valueAsDate = new Date();
-            if (typeof fechaNotaInput !== 'undefined') fechaNotaInput.valueAsDate = new Date();
-            controlSecretarioSelect.value = 'Pendiente';
-            firmaSecretarioSelect.value = 'si';
-            secretarioSelect.value = 'Dra Patricia Soledad Riveros';
-            firmaDefensorSelect.value = 'Defensor Titular';
-        }
-
-        function abrirModalRegistro(id = null) {
-            if (id) {
-                expedienteEditando = expedientes.find(exp => exp.id === id);
-                if (!expedienteEditando) return;
-                
-                registroModalTitle.textContent = 'Editando Expediente';
-                numeroYAnioInput.value = expedienteEditando.numeroYAnio || '';
-                caratulaCausaInput.value = expedienteEditando.caratula || '';
-                document.getElementById('fecha-pase').value = formatearFechaParaInput(expedienteEditando.fechaPase);
-                document.getElementById('juzgado').value = expedienteEditando.juzgado || '';
-                document.getElementById('modo-intervencion').value = expedienteEditando.modoIntervencion || '';
-                document.getElementById('descripcion-tarea').value = expedienteEditando.descripcion || '';
-                controlSecretarioSelect.value = expedienteEditando.controlSecretario || 'Pendiente';
-                document.getElementById('fecha-firma-digital').value = formatearFechaParaInput(expedienteEditando.fechaFirmaDigital);
-                firmaSecretarioSelect.value = expedienteEditando.firmaSecretario || 'si';
-                
-                if (expedienteEditando.firmaSecretario === 'si') {
-                    secretarioSelect.value = expedienteEditando.secretario || 'Dra Patricia Soledad Riveros';
-                } else {
-                    firmaDefensorSelect.value = expedienteEditando.firmaDefensor || 'Defensor Titular';
-                    if (expedienteEditando.firmaDefensor === 'Defensor Subrogante') {
-                        subroganteTextoInput.value = expedienteEditando.subroganteTexto || '';
-                    }
-                }
-                
-                notasTemporales = expedienteEditando.notas ? [...expedienteEditando.notas] : [];
+        function actualizarEstadoFirma() {
+            const isCompleted = controlSecretarioSelect.value === 'Completado el control';
+            const firmaFields = [firmaSecretarioSelect, secretarioSelect, firmaDefensorSelect, subroganteTextoInput];
+            firmaFields.forEach(field => field.disabled = !isCompleted);
+            if (isCompleted) {
+                firmaSecretarioSelect.dispatchEvent(new Event('change'));
             } else {
-                expedienteEditando = null;
-                registroModalTitle.textContent = 'Nuevo Expediente';
-                limpiarFormularioRegistro();
-                notasTemporales = [];
+                secretarioField.style.display = 'none';
+                firmaDefensorField.style.display = 'none';
+                subroganteField.style.display = 'none';
             }
-            
-            actualizarEstadoFirma();
-            paginaActualNotas = 1;
-            actualizarTablaNotas();
-            
-            tabs[0].click();
-            registroModal.style.display = 'flex';
         }
 
         async function guardarExpediente() {
@@ -1614,11 +1538,10 @@
                 return;
             }
 
-            const esDuplicado = expedientes.some(exp => exp.numeroYAnio === numeroYAnio && exp.id !== expedienteEditando?.id);
+            const esDuplicado = datosLocales.some(exp => exp.numeroYAnio === numeroYAnio && exp.id !== expedienteEditando?.id);
             if (esDuplicado) {
-                 cerrarModalRegistro();
-                 mostrarAlerta("Causa existente, intente otra vez", "danger");
-                 return;
+                mostrarModalAlerta('Este número de expediente ya existe.');
+                return;
             }
 
             const expedienteData = {
@@ -1636,23 +1559,21 @@
                 subroganteTexto: (firmaSecretarioSelect.value === 'no' && firmaDefensorSelect.value === 'Defensor Subrogante') ? subroganteTextoInput.value.trim() : '',
                 notas: [...notasTemporales]
             };
-            
+
             if (expedienteData.firmaDefensor === 'Defensor Subrogante' && !expedienteData.subroganteTexto && !subroganteTextoInput.disabled) {
                 mostrarModalAlerta('Por favor, especifique el nombre del subrogante.');
                 return;
             }
 
-            try {
-                registroGuardarBtn.disabled = true;
-                registroGuardarBtn.textContent = 'Guardando...';
+            registroGuardarBtn.disabled = true;
+            registroGuardarBtn.textContent = 'Guardando...';
 
+            try {
                 if (expedienteEditando) {
-                    await db.collection('expedientes').doc(expedienteEditando.id).update(expedienteData);
+                    await actualizarExpedienteLocal(expedienteEditando.id, expedienteData);
                 } else {
-                    await db.collection('expedientes').add(expedienteData);
+                    await agregarExpedienteLocal(expedienteData);
                 }
-                
-                await cargarExpedientes();
                 cerrarModalRegistro();
                 mostrarAlerta('Expediente guardado correctamente.', 'success');
             } catch (error) {
@@ -1664,28 +1585,23 @@
             }
         }
 
-        function cerrarModal() { modal.style.display = 'none'; }
-        function cerrarModalRegistro() {
-            registroModal.style.display = 'none';
-            errorNumeroYAnio.style.display = 'none';
-        }
-
+        // ============================================================
+        // FUNCIONES PARA NOTAS
+        // ============================================================
         function actualizarTablaNotas() {
             cuerpoTablaNotas.innerHTML = '';
             const totalNotas = notasTemporales.length;
-            
             if (totalNotas === 0) {
                 infoPaginacion.textContent = 'No hay notas';
                 controlesPaginacion.innerHTML = '';
                 return;
             }
-            
             const notasOrdenadas = [...notasTemporales].reverse();
             const totalPaginas = Math.ceil(totalNotas / notasPorPagina);
             paginaActualNotas = Math.min(paginaActualNotas, totalPaginas);
             const inicio = (paginaActualNotas - 1) * notasPorPagina;
             const fin = inicio + notasPorPagina;
-            
+
             notasOrdenadas.slice(inicio, fin).forEach((nota, index) => {
                 const fila = cuerpoTablaNotas.insertRow();
                 const originalIndex = totalNotas - 1 - (inicio + index);
@@ -1695,9 +1611,9 @@
                     <td style="padding:10px; border-bottom:1px solid #e2e8f0;"><button class="btn-sm btn-danger eliminar-nota-btn" data-index="${originalIndex}">Eliminar</button></td>
                 `;
             });
-            
+
             infoPaginacion.textContent = `Mostrando ${inicio + 1}-${Math.min(fin, totalNotas)} de ${totalNotas} notas`;
-            renderizarControlesPaginacion(totalPaginas);
+            renderizarControlesPaginacionNotas(totalPaginas);
 
             document.querySelectorAll('.eliminar-nota-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -1706,8 +1622,8 @@
                 });
             });
         }
-        
-        function renderizarControlesPaginacion(totalPaginas) {
+
+        function renderizarControlesPaginacionNotas(totalPaginas) {
             controlesPaginacion.innerHTML = '';
             if (totalPaginas <= 1) return;
             for (let i = 1; i <= totalPaginas; i++) {
@@ -1736,100 +1652,219 @@
             textoNotaInput.focus();
         }
 
-        // --- Función de Exportación JSON (modo mixto) ---
-        async function exportarJSON() {
-            try {
-                mostrarAlerta('Preparando exportación...', 'info');
-                // Obtener todos los documentos de la colección 'expedientes'
-                const querySnapshot = await db.collection('expedientes').get();
-                const datos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                // Crear el objeto de exportación con metadatos
-                const exportData = {
-                    version: '1.0',
-                    fecha_exportacion: new Date().toISOString(),
-                    total_registros: datos.length,
-                    datos: datos
-                };
+        // ============================================================
+        // FUNCIONES DE IMPORTACIÓN / EXPORTACIÓN JSON
+        // ============================================================
+        function exportarJSON() {
+            if (datosLocales.length === 0) {
+                mostrarAlerta('No hay registros para exportar.', 'info');
+                return;
+            }
+            const exportData = {
+                version: '1.0',
+                fecha_exportacion: new Date().toISOString(),
+                total_registros: datosLocales.length,
+                datos: datosLocales
+            };
+            const jsonString = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const fechaStr = new Date().toISOString().slice(0, 10);
+            a.download = `expedientes_${fechaStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            mostrarAlerta(`Exportación exitosa: ${datosLocales.length} registros`, 'success');
+        }
 
-                // Convertir a JSON con formato
-                const jsonString = JSON.stringify(exportData, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                
-                // Crear enlace y descargar
-                const a = document.createElement('a');
-                a.href = url;
-                const fechaStr = new Date().toISOString().slice(0,10);
-                a.download = `expedientes_${fechaStr}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                mostrarAlerta(`Exportación exitosa: ${datos.length} registros`, 'success');
+        function importarJSON(archivo) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const contenido = JSON.parse(e.target.result);
+                    let registros = [];
+                    if (contenido.datos && Array.isArray(contenido.datos)) {
+                        registros = contenido.datos;
+                    } else if (Array.isArray(contenido)) {
+                        registros = contenido;
+                    } else {
+                        throw new Error('Formato JSON inválido: debe contener un array en "datos" o ser un array directo.');
+                    }
+                    if (registros.length === 0) {
+                        mostrarAlerta('El archivo JSON no contiene registros.', 'info');
+                        return;
+                    }
+                    // Reemplazar datos locales
+                    datosLocales = registros;
+                    paginaActualTabla = 1;
+                    mostrarExpedientesEnTabla();
+                    mostrarAlerta(`Importación exitosa: ${registros.length} registros cargados.`, 'success');
+                } catch (error) {
+                    console.error('Error al importar JSON:', error);
+                    mostrarAlerta('Error al leer el archivo JSON: ' + error.message, 'danger');
+                }
+            };
+            reader.readAsText(archivo);
+        }
+
+        // ============================================================
+        // FUNCIONES DE CONEXIÓN FIRESTORE
+        // ============================================================
+        async function conectarFirestore() {
+            if (conectadoFirestore) {
+                // Desconectar
+                conectadoFirestore = false;
+                toggleFirestoreBtn.textContent = 'Conectar a Firestore';
+                toggleFirestoreBtn.className = 'btn btn-firestore';
+                mostrarAlerta('Desconectado de Firestore. Los cambios solo serán locales.', 'info');
+                return;
+            }
+
+            // Conectar
+            try {
+                mostrarAlerta('Cargando datos desde Firestore...', 'info');
+                const querySnapshot = await db.collection('expedientes').get();
+                const firestoreData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (firestoreData.length > 0) {
+                    datosLocales = firestoreData;
+                } else {
+                    // Si no hay datos en Firestore, mantenemos los datos locales (vacío o importados)
+                    // pero mostramos mensaje
+                    mostrarAlerta('Firestore está vacío. Los datos locales se mantienen.', 'info');
+                }
+                conectadoFirestore = true;
+                toggleFirestoreBtn.textContent = 'Desconectar Firestore';
+                toggleFirestoreBtn.className = 'btn btn-firestore-off';
+                paginaActualTabla = 1;
+                mostrarExpedientesEnTabla();
+                mostrarAlerta(`Conectado a Firestore. ${firestoreData.length} registros cargados.`, 'success');
             } catch (error) {
-                console.error('Error al exportar JSON:', error);
-                mostrarAlerta('Error al exportar los datos.', 'danger');
+                console.error('Error al conectar con Firestore:', error);
+                mostrarAlerta('Error al cargar datos desde Firestore. Verifica tu conexión.', 'danger');
             }
         }
 
-        // --- Event Listeners ---
+        // ============================================================
+        // IMPRESIÓN Y REPORTE
+        // ============================================================
+        function imprimirListado() {
+            const expedientesFiltrados = obtenerExpedientesFiltrados();
+            const hayFiltros = searchInput.value || monthFilter.value || yearFilter.value || signatureFilter.value || controlFilter.value || juzgadoFilter.value || intervencionFilter.value;
+
+            let contenidoHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head><title>Listado de Expedientes</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; font-size: 12px; }
+                    h1 { text-align: center; color: #0f4c75; margin-bottom: 20px; }
+                    .info-filtros { background-color: #f0f0f0; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 11px; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                    th { background-color: #f0f0f0; font-weight: bold; }
+                    tr:nth-child(even) { background-color: #f9f9f9; }
+                    .firma-digital { text-align: center; }
+                </style>
+                </head>
+                <body>
+                    <h1>Listado de Expedientes ${hayFiltros ? '(Filtrados)' : '(Completo)'}</h1>
+            `;
+            if (hayFiltros) {
+                contenidoHTML += `<div class="info-filtros"><strong>Filtros aplicados:</strong><br>${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}${controlFilter.value ? `Control: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}${intervencionFilter.value ? `Intervención: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}<strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong></div>`;
+            }
+            contenidoHTML += `<table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th></tr></thead><tbody>`;
+            expedientesFiltrados.forEach((exp, index) => {
+                const numeroDescendente = expedientesFiltrados.length - index;
+                let observacionesTexto = '';
+                if (exp.notas && exp.notas.length > 0) {
+                    const ultimaNota = exp.notas[exp.notas.length - 1];
+                    observacionesTexto = `${ultimaNota.fecha}: ${ultimaNota.texto.substring(0, 30)}${ultimaNota.texto.length > 30 ? '...' : ''}`;
+                    if (exp.notas.length > 1) observacionesTexto += ` (${exp.notas.length} notas)`;
+                }
+                const firmaDigital = exp.fechaFirmaDigital ? 'Sí' : 'No';
+                contenidoHTML += `<tr><td>${numeroDescendente}</td><td>${exp.fechaPase || 'N/A'}</td><td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td><td>${exp.descripcion || 'N/A'}</td><td class="firma-digital">${firmaDigital}</td><td>${observacionesTexto}</td></tr>`;
+            });
+            contenidoHTML += `</tbody></table><p style="text-align: right; margin-top: 20px; font-size: 10px;">Generado el ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}</p></body></html>`;
+
+            const ventanaImpresion = window.open('', '_blank');
+            ventanaImpresion.document.write(contenidoHTML);
+            ventanaImpresion.document.close();
+            ventanaImpresion.onload = function() {
+                ventanaImpresion.focus();
+                ventanaImpresion.print();
+            };
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             const hoy = new Date().toISOString().split('T')[0];
-            if (typeof document.getElementById('fecha-nota') !== 'undefined') document.getElementById('fecha-nota').value = hoy;
+            document.getElementById('fecha-nota').value = hoy;
             document.getElementById('fecha-pase').value = hoy;
-            
+
+            // Cerrar modales con botón X
             closeModalBtns.forEach(btn => btn.addEventListener('click', () => {
                 cerrarModal();
                 cerrarModalRegistro();
                 alertModal.style.display = 'none';
                 logoutAlertModal.style.display = 'none';
             }));
-            
+
             modalCerrarBtn.addEventListener('click', cerrarModal);
             registroCancelarBtn.addEventListener('click', cerrarModalRegistro);
             registroGuardarBtn.addEventListener('click', guardarExpediente);
+            document.getElementById('alert-modal-btn').addEventListener('click', () => alertModal.style.display = 'none');
 
-            document.getElementById('alert-modal-btn').addEventListener('click', () => {
-                alertModal.style.display = 'none';
-            });
-            
             printBtn.addEventListener('click', imprimirListado);
-            
+
             reporteBtn.addEventListener('click', () => {
                 vistaPrincipal.style.display = 'none';
                 vistaReporte.style.display = 'block';
                 reporteIframe.src = 'https://admindefensoria6.github.io/rf-causas/reporte.html';
             });
-
             cerrarReporteBtn.addEventListener('click', () => {
                 vistaReporte.style.display = 'none';
                 vistaPrincipal.style.display = 'flex';
             });
-            
+
             nuevoBtn.addEventListener('click', () => abrirModalRegistro());
-            
-            // Evento para exportar JSON
+
+            // Exportar JSON
             exportJsonBtn.addEventListener('click', exportarJSON);
-            
+
+            // Importar JSON
+            importJsonBtn.addEventListener('click', () => importJsonInput.click());
+            importJsonInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    importarJSON(e.target.files[0]);
+                    importJsonInput.value = ''; // permitir re-importar el mismo archivo
+                }
+            });
+
+            // Conectar/Desconectar Firestore
+            toggleFirestoreBtn.addEventListener('click', conectarFirestore);
+
+            // Eventos de la tabla (Ver, Editar, Eliminar)
             expedientesTbody.addEventListener('click', (e) => {
                 const target = e.target.closest('button');
                 if (!target) return;
-                
                 const id = target.dataset.id;
-                
                 if (target.classList.contains('ver-btn')) {
                     abrirModalVer(id);
                 } else if (target.classList.contains('editar-btn')) {
                     abrirModalRegistro(id);
                 } else if (target.classList.contains('eliminar-btn')) {
                     if (confirm('¿Está seguro de que desea eliminar este expediente?')) {
-                        eliminarExpediente(id);
+                        eliminarExpedienteLocal(id);
                     }
                 }
             });
-            
+
+            // Tabs del formulario
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     tabs.forEach(t => t.classList.remove('active'));
@@ -1838,42 +1873,66 @@
                     document.getElementById(tab.dataset.tab).classList.add('active');
                 });
             });
-            
+
+            // Cambios en control de secretario
             controlSecretarioSelect.addEventListener('change', actualizarEstadoFirma);
 
+            // Cambios en firma secretario
             firmaSecretarioSelect.addEventListener('change', function() {
-                if(this.disabled) return;
+                if (this.disabled) return;
                 secretarioField.style.display = this.value === 'si' ? 'block' : 'none';
                 firmaDefensorField.style.display = this.value === 'no' ? 'block' : 'none';
                 firmaDefensorSelect.dispatchEvent(new Event('change'));
             });
-            
             firmaDefensorSelect.addEventListener('change', function() {
-                if(this.disabled) return;
-                 subroganteField.style.display = (this.value === 'Defensor Subrogante' && firmaSecretarioSelect.value === 'no') ? 'block' : 'none';
+                if (this.disabled) return;
+                subroganteField.style.display = (this.value === 'Defensor Subrogante' && firmaSecretarioSelect.value === 'no') ? 'block' : 'none';
             });
-            
+
+            // Agregar nota
             agregarNotaBtn.addEventListener('click', agregarNota);
             textoNotaInput.addEventListener('keypress', (e) => e.key === 'Enter' && (e.preventDefault(), agregarNota()));
-            
+
+            // Filtros
             const filtros = [searchInput, monthFilter, yearFilter, signatureFilter, controlFilter, juzgadoFilter, intervencionFilter];
-            
             filtros.forEach(el => {
-                el.addEventListener('input', () => {
-                    paginaActualTabla = 1; 
-                    mostrarExpedientesEnTabla();
-                });
-                el.addEventListener('change', () => {
-                    paginaActualTabla = 1; 
-                    mostrarExpedientesEnTabla();
-                });
+                el.addEventListener('input', () => { paginaActualTabla = 1; mostrarExpedientesEnTabla(); });
+                el.addEventListener('change', () => { paginaActualTabla = 1; mostrarExpedientesEnTabla(); });
             });
-            
+
+            // Cerrar modales al hacer clic fuera
             window.addEventListener('click', (e) => {
                 if (e.target === modal) cerrarModal();
                 if (e.target === registroModal) cerrarModalRegistro();
                 if (e.target === alertModal) alertModal.style.display = 'none';
                 if (e.target === logoutAlertModal) logoutAlertModal.style.display = 'none';
+            });
+
+            // Autenticación
+            auth.onAuthStateChanged((user) => {
+                if (!user) {
+                    window.location.replace('index.html');
+                } else {
+                    loadingScreen.style.display = 'none';
+                    paginaApp.style.display = 'block';
+                    // Inicializar tabla vacía
+                    datosLocales = [];
+                    mostrarExpedientesEnTabla();
+                }
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', () => {
+                logoutAlertModal.style.display = 'flex';
+            });
+            logoutCloseBtn.addEventListener('click', () => logoutAlertModal.style.display = 'none');
+            logoutCancelBtn.addEventListener('click', () => logoutAlertModal.style.display = 'none');
+            logoutConfirmBtn.addEventListener('click', () => {
+                logoutAlertModal.style.display = 'none';
+                auth.signOut().catch((error) => {
+                    console.error('Error al cerrar sesión:', error);
+                    mostrarAlerta('Error al cerrar sesión', 'danger');
+                });
             });
         });
     </script>

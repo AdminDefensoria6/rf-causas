@@ -1060,7 +1060,7 @@
                     <div class="img-wrapper" id="imagenAbrirLogin"
                          role="button"
                          tabindex="0"
-                         aria-label="Abrir inicio de sesión o registro"
+                         aria-label="Abrir inicio de sesión"
                          title="Haz clic para acceder al sistema">
                         <img src="https://github.com/sistemadigital/iconos/blob/main/1.png?raw=true"
                              alt="Sistema Digital Defensoría"
@@ -1099,7 +1099,7 @@
         </div>
     </footer>
 
-    <!-- MODALES Y SCRIPTS (sin cambios) -->
+    <!-- MODAL LOGIN -->
     <div id="modalLogin" class="modal-overlay">
         <div class="modal-contenido">
             <button class="btn-cerrar-modal" id="cerrarModalLoginBtn">&times;</button>
@@ -1118,38 +1118,6 @@
                     <input type="checkbox" id="mostrarLoginPass" /> Mostrar contraseña
                 </label>
                 <button class="btn-modal-primario" id="btnLoginAction">Entrar al sistema</button>
-                <div class="enlace-modal">
-                    ¿No tienes cuenta? <span id="cambiarARegistroDesdeLogin">Regístrate aquí</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalRegistro" class="modal-overlay">
-        <div class="modal-contenido">
-            <button class="btn-cerrar-modal" id="cerrarModalRegistroBtn">&times;</button>
-            <h3>Expedientes Asignados</h3>
-            <p class="modal-sub">Defensoría Oficial Civil y Comercial 6<br><span style="font-weight:400;font-size:0.85rem;">Ministerio Público de Misiones</span></p>
-            <div>
-                <div class="grupo-input">
-                    <label>Nombre completo</label>
-                    <input type="text" id="registerName" placeholder="Nombre y apellido" autocomplete="name" />
-                </div>
-                <div class="grupo-input">
-                    <label>Correo electrónico</label>
-                    <input type="email" id="registerEmail" placeholder="usuario@mpmisiones.gob.ar" autocomplete="email" />
-                </div>
-                <div class="grupo-input">
-                    <label>Contraseña</label>
-                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
-                </div>
-                <label class="mostrar-clave">
-                    <input type="checkbox" id="mostrarRegPass" /> Mostrar contraseña
-                </label>
-                <button class="btn-modal-primario" id="btnRegisterAction">Registrarse</button>
-                <div class="enlace-modal">
-                    ¿Ya tienes cuenta? <span id="cambiarALoginDesdeRegistro">Inicia sesión</span>
-                </div>
             </div>
         </div>
     </div>
@@ -1184,8 +1152,7 @@
         // Configuración de dominio por defecto (para facilitar escritura)
         const DEFAULT_DOMAIN = "@mpmisiones.gob.ar";
 
-        // Variables de estado para evitar redirección no deseada
-        let isRegistering = false;
+        // Variable de estado para evitar redirección no deseada
         let isLoggingIn = false;
 
         // Función para mostrar mensajes tipo toast
@@ -1238,49 +1205,15 @@
             }
         };
 
-        // ========== REGISTRO ==========
-        window.registerUser = async function() {
-            const name = document.getElementById('registerName').value.trim();
-            const rawEmail = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const email = formatEmail(rawEmail);
-
-            if (!name || !email || !password) {
-                showMessage('Completa todos los campos', 'error');
-                return;
-            }
-            if (password.length < 6) {
-                showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-            isRegistering = true;
-            try {
-                const cred = await auth.createUserWithEmailAndPassword(email, password);
-                await cred.user.updateProfile({ displayName: name });
-                showMessage('Cuenta creada con éxito', 'success');
-                setTimeout(() => {
-                    window.location.href = 'app.html';
-                }, 1500);
-            } catch (error) {
-                isRegistering = false;
-                if (error.code === 'auth/email-already-in-use') {
-                    showMessage('El correo ya está registrado', 'error');
-                } else {
-                    showMessage('Error al crear la cuenta', 'error');
-                }
-            }
-        };
-
         // Redirección si ya está autenticado (evita bucle)
         auth.onAuthStateChanged((user) => {
-            if (user && !isRegistering && !isLoggingIn && (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '')) {
+            if (user && !isLoggingIn && (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '')) {
                 window.location.href = 'app.html';
             }
         });
 
         // ========== MANEJO DE MODALES ==========
         const modalLogin = document.getElementById('modalLogin');
-        const modalRegistro = document.getElementById('modalRegistro');
 
         function abrirModalLogin() {
             modalLogin.classList.add('active');
@@ -1289,53 +1222,26 @@
         function cerrarModalLogin() {
             modalLogin.classList.remove('active');
         }
-        function abrirModalRegistro() {
-            modalRegistro.classList.add('active');
-            document.getElementById('registerName').focus();
-        }
-        function cerrarModalRegistro() {
-            modalRegistro.classList.remove('active');
-        }
 
-        // Botones cerrar
+        // Botón cerrar
         document.getElementById('cerrarModalLoginBtn').addEventListener('click', cerrarModalLogin);
-        document.getElementById('cerrarModalRegistroBtn').addEventListener('click', cerrarModalRegistro);
 
         // Cerrar al hacer clic fuera
         modalLogin.addEventListener('click', (e) => {
             if (e.target === modalLogin) cerrarModalLogin();
         });
-        modalRegistro.addEventListener('click', (e) => {
-            if (e.target === modalRegistro) cerrarModalRegistro();
-        });
 
-        // Acciones de botones
+        // Acción del botón login
         document.getElementById('btnLoginAction').addEventListener('click', () => loginUser());
-        document.getElementById('btnRegisterAction').addEventListener('click', () => registerUser());
 
-        // Mostrar/ocultar contraseña en modales
+        // Mostrar/ocultar contraseña en modal login
         const mostrarLoginCheck = document.getElementById('mostrarLoginPass');
         const loginPassInput = document.getElementById('loginPassword');
         mostrarLoginCheck.addEventListener('change', () => {
             loginPassInput.type = mostrarLoginCheck.checked ? 'text' : 'password';
         });
-        const mostrarRegCheck = document.getElementById('mostrarRegPass');
-        const regPassInput = document.getElementById('registerPassword');
-        mostrarRegCheck.addEventListener('change', () => {
-            regPassInput.type = mostrarRegCheck.checked ? 'text' : 'password';
-        });
 
-        // Cambiar entre modales
-        document.getElementById('cambiarARegistroDesdeLogin').addEventListener('click', () => {
-            cerrarModalLogin();
-            abrirModalRegistro();
-        });
-        document.getElementById('cambiarALoginDesdeRegistro').addEventListener('click', () => {
-            cerrarModalRegistro();
-            abrirModalLogin();
-        });
-
-        // Enter para login y registro
+        // Enter para login
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
         const handleLoginEnter = (e) => {
@@ -1346,19 +1252,6 @@
         };
         loginEmailInput.addEventListener('keypress', handleLoginEnter);
         loginPasswordInput.addEventListener('keypress', handleLoginEnter);
-
-        const regNameInput = document.getElementById('registerName');
-        const regEmailInput = document.getElementById('registerEmail');
-        const regPasswordInput = document.getElementById('registerPassword');
-        const handleRegisterEnter = (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                registerUser();
-            }
-        };
-        regNameInput.addEventListener('keypress', handleRegisterEnter);
-        regEmailInput.addEventListener('keypress', handleRegisterEnter);
-        regPasswordInput.addEventListener('keypress', handleRegisterEnter);
 
         // ========== CLIC EN LA IMAGEN: ABRE MODAL LOGIN ==========
         const imagenWrapper = document.getElementById('imagenAbrirLogin');
@@ -1381,7 +1274,6 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 if (modalLogin.classList.contains('active')) cerrarModalLogin();
-                if (modalRegistro.classList.contains('active')) cerrarModalRegistro();
             }
         });
 

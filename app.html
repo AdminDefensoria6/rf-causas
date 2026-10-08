@@ -211,7 +211,12 @@
             background-color: #f8fafc;
         }
         
-        td:last-child {
+        table:not(#expedientes-table) td:last-child {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .acciones-celda {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
@@ -509,6 +514,56 @@
             color: #991b1b;
         }
 
+        /* ===== Columna: Pase Digital asignado ===== */
+        #expedientes-table { min-width: 1120px; }
+        #expedientes-table th, #expedientes-table td { padding: 12px 12px; }
+        th.col-pase-digital, td.col-pase-digital { min-width: 270px; width: 270px; background: #fbfdff; border-left: 2px solid #dbeafe; }
+        th.col-pase-digital { color: var(--primary); background: #eff6ff; }
+        .pd-muted { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
+        .pd-empty { display: inline-block; color: #94a3b8; font-size: 0.85rem; padding: 4px 10px; border: 1px dashed #cbd5e1; border-radius: 20px; }
+        .pd-error { color: var(--danger); font-size: 0.85rem; }
+        .pd-card { display: flex; flex-direction: column; gap: 3px; font-size: 0.8rem; line-height: 1.3; }
+        .pd-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+        .pd-badge { display: inline-block; padding: 3px 10px; border-radius: 40px; font-weight: 700; font-size: 0.72rem; white-space: nowrap; background: #f1f5f9; color: #475569; }
+        .pd-b-sec { background: #fff3e0; color: #e67e22; }
+        .pd-b-proc { background: #e3f2fd; color: #1565c0; }
+        .pd-b-fin { background: #e8f5e9; color: #2e7d32; }
+        .pd-b-def { background: #f3e5f5; color: #7b1fa2; }
+        .pd-b-dev { background: #ffebee; color: #c62828; }
+        .pd-b-rem { background: #e8eaf6; color: #3949ab; }
+        .pd-b-rech { background: #fce4ec; color: #c62828; }
+        .pd-b-espera { background: #fff8e1; color: #f57f17; }
+        .pd-nivel { display: inline-block; padding: 3px 9px; border-radius: 40px; font-weight: 700; font-size: 0.72rem; background: #e0f2fe; color: #0369a1; }
+        .pd-fila { display: flex; gap: 6px; }
+        .pd-k { flex: 0 0 68px; color: var(--text-muted); font-weight: 600; }
+        .pd-v { flex: 1; min-width: 0; color: var(--text-main); word-break: break-word; }
+        .pd-plazo-ok { color: #2e7d32; font-weight: 700; }
+        .pd-plazo-warn { color: #e67e22; font-weight: 700; }
+        .pd-plazo-bad { color: #c62828; font-weight: 700; }
+        .pd-demora { display: inline-block; min-width: 26px; text-align: center; padding: 0 9px; border-radius: 30px; font-weight: 800; font-size: 0.78rem; }
+        .pd-demora-roja { background: #ffebee; color: #c62828; border: 2px solid #ef5350; }
+        .pd-demora-verde { background: #e8f5e9; color: #2e7d32; border: 2px solid #66bb6a; }
+        .pd-acciones { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+        .pd-mas { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Modal del pase digital */
+        #pase-digital-modal .modal-content { max-width: 760px; }
+        .pd-modal-exp { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px; }
+        .pd-bloque { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; background: #fff; }
+        .pd-bloque:last-child { margin-bottom: 0; }
+        .pd-bloque-titulo { font-weight: 600; color: var(--primary); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; }
+        .pd-item { min-width: 0; }
+        .pd-item.pd-full { grid-column: 1 / -1; }
+        .pd-item-l { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+        .pd-item-v { font-size: 0.95rem; color: var(--text-main); word-break: break-word; }
+        .pd-mov-titulo { margin: 16px 0 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary); border-top: 1px dashed var(--border); padding-top: 14px; }
+        .pd-mov { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .pd-mov:last-child { border-bottom: none; }
+        .pd-mov-meta { color: var(--text-muted); font-size: 0.75rem; }
+        .pd-mov-com { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
+        @media (max-width: 600px) { .pd-grid { grid-template-columns: 1fr; } }
+
         /* Responsive Layout */
         @media (max-width: 1024px) {
             .main-layout {
@@ -545,7 +600,7 @@
         }
 
         @media print {
-            .app-header, .filters-section, .tabla-paginacion, td:last-child, .no-print { display: none !important; }
+            .app-header, .filters-section, .tabla-paginacion, .no-print { display: none !important; }
             .main-layout { display: block; }
             .table-section { width: 100%; }
             body { background: white; padding: 0; }
@@ -594,6 +649,7 @@
                                     <th>Firma Digital</th>
                                     <th>Observaciones</th>
                                     <th class="no-print">Acciones</th>
+                                    <th class="col-pase-digital">Pase Digital asignado</th>
                                 </tr>
                             </thead>
                             <tbody id="expedientes-tbody">
@@ -649,6 +705,7 @@
                             <option value="Pendiente">Pendiente</option>
                             <option value="En control">En control</option>
                             <option value="Completado el control">Completado</option>
+                            <optgroup label="Estado del pase digital" id="control-filter-pases"></optgroup>
                         </select>
                         <select id="juzgado-filter">
                             <option value="">Todos los juzgados</option>
@@ -720,6 +777,7 @@
                             <option value="Defensor de Ausente">Defensor de Ausente</option>
                             <option value="Defensor MPC Incapaz">Defensor MPC Incapaz</option>
                             <option value="Asesor de incapaces">Asesor de incapaces</option>
+                            <optgroup label="Intervención en pase digital" id="intervencion-filter-pases"></optgroup>
                         </select>
                     </div>
                 </div>
@@ -733,6 +791,23 @@
                 <iframe id="reporte-iframe" src="" style="width: 100%; height: 75vh; border: none; border-radius: 10px; background-color: white; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);"></iframe>
             </div>
 
+        </div>
+    </div>
+
+    <!-- MODAL: PASE DIGITAL ASIGNADO -->
+    <div class="modal" id="pase-digital-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pase Digital asignado</h2>
+                <button class="close-modal" id="pase-modal-x-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="pd-modal-exp" id="pase-modal-exp"></div>
+                <div id="pase-modal-body"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="pase-modal-cerrar-btn">Cerrar</button>
+            </div>
         </div>
     </div>
 
@@ -1134,6 +1209,7 @@
                 loadingScreen.style.display = 'none';
                 paginaApp.style.display = 'block';
                 cargarExpedientes();
+                iniciarPasesDigitales();
             }
         });
 
@@ -1195,10 +1271,454 @@
             alertModal.style.display = 'flex';
         }
         
+        // ==========================================
+        // PASE DIGITAL ASIGNADO
+        // Muestra, para cada expediente, los detalles del pase digital que el
+        // sistema de Secretaría registra, únicamente cuando está asignado a
+        // Fioravante Rómulo (con o sin acento). Se cruza por número de expediente.
+        // ==========================================
+        const PASES_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyBiPiBIUTecqjifyZBqbrNw8aQNv7rwqwA",
+            authDomain: "pasedefensoria6.firebaseapp.com",
+            projectId: "pasedefensoria6",
+            storageBucket: "pasedefensoria6.firebasestorage.app",
+            messagingSenderId: "785250989941",
+            appId: "1:785250989941:web:1bfb35a5f954144dbb853c"
+        };
+        const PASE_EMPLEADO_ID = 'emp6'; // Fioravante Rómulo
+        const PASE_EMPLEADOS = {
+            emp1: 'Bazante Nadia Romina', emp3: 'Cardozo Maria Raquel', emp4: 'Cedron Noelia',
+            emp6: 'Fioravante Rómulo', emp7: 'Gonzalez Alberto Misael', emp8: 'Gonzalez Juan Jose',
+            emp9: 'Gudiño Natalia Esther', emp15: 'Martinis Carlos Esteban', emp10: 'Ortega Lucia Noemi',
+            emp11: 'Pablos Patricia Tamara', emp12: 'Palacios Ana Gabriela', emp13: 'Sosa Rita Cecilia'
+        };
+        const PASE_SECRETARIOS = { sec1: 'Corrales A.Mariela', sec2: 'Riveros Patricia', sec3: 'Magnani Enzo' };
+        const PASE_NIVELES_DIAS = { 1: 5, 2: 3, 3: 3, 4: 2 };
+        // Feriados (mes-día), idénticos a los que usa el sistema de Secretaría
+        const PASE_FERIADOS = new Set(['1-1', '2-3', '2-4', '2-8', '2-9', '2-12', '2-13', '2-16', '2-17', '3-24', '3-25', '3-26', '3-28', '3-29', '4-1', '4-2', '4-3', '4-17', '4-18', '5-1', '5-25', '6-20', '7-9', '8-17', '10-11', '10-12', '10-13', '10-14', '11-18', '11-22', '11-23', '11-24', '12-8', '12-25']);
+        const PASE_ESTADOS = {
+            en_secretaria: { label: '📋 Secretaría', clase: 'pd-b-sec' },
+            en_proceso: { label: '🔄 En proceso', clase: 'pd-b-proc' },
+            finalizada: { label: '✅ Finalizada', clase: 'pd-b-fin' },
+            en_defensor: { label: '⚖️ Defensor', clase: 'pd-b-def' },
+            devuelto_siged: { label: '↩️ Devuelto SIGED', clase: 'pd-b-dev' },
+            remitido: { label: '📤 Remitido', clase: 'pd-b-rem' },
+            rechazado: { label: '🚫 Rechazado', clase: 'pd-b-rech' },
+            en_espera: { label: '⏳ En espera', clase: 'pd-b-espera' }
+        };
+
+        let pasesPorExpediente = new Map();
+        let pasesEstado = 'cargando'; // 'cargando' | 'listo' | 'error'
+        let expedientesCargados = false;
+        let unsubscribePases = null;
+
+        function escHtml(v) {
+            return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // --- Normalización de texto y de número de expediente ---
+        function paseNorm(s) {
+            return String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        }
+
+        // "12345/2024", "12.345 / 24", "012345-2024" -> "12345/2024"
+        function paseClaveExpediente(s) {
+            const t = paseNorm(s).replace(/\./g, '');
+            const m = t.match(/(\d+)\s*[\/\-]\s*(\d{4}|\d{2})(?!\d)/);
+            if (m) {
+                const numero = m[1].replace(/^0+(?=\d)/, '');
+                const anio = m[2].length === 2 ? '20' + m[2] : m[2];
+                return `${numero}/${anio}`;
+            }
+            return t.replace(/\s+/g, '');
+        }
+
+        // Fioravante Rómulo / Fioravante Romulo / Rómulo Fioravante
+        function paseEsNombreFioravante(txt) {
+            const t = paseNorm(txt);
+            return t.includes('fioravante') && t.includes('romulo');
+        }
+
+        function paseEsDeFioravante(c) {
+            if ([c.empleadoAsignado, c.empleadoOriginal, c.empleadoId].includes(PASE_EMPLEADO_ID)) return true;
+            if (paseEsNombreFioravante(c.empleadoAsignado) || paseEsNombreFioravante(c.empleadoOriginal)) return true;
+            const sinEmpleado = !c.empleadoAsignado && !c.empleadoOriginal && !c.empleadoId;
+            if (sinEmpleado && Array.isArray(c.historial)) {
+                return c.historial.some(h => /asignado/i.test(h?.accion || '') && paseEsNombreFioravante(h.accion));
+            }
+            return false;
+        }
+
+        function paseNombreEmpleado(id) {
+            return PASE_EMPLEADOS[id] || (id ? String(id) : '');
+        }
+
+        function paseFechaOrden(c) {
+            const t = new Date(c.fechaPaseSecretario || c.fechaAsignacion || 0).getTime();
+            return isNaN(t) ? 0 : t;
+        }
+
+        // --- Fechas y plazos (misma lógica que el sistema de Secretaría) ---
+        function paseFmtDt(iso) {
+            if (!iso) return '-';
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '-';
+            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}, ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function paseFmtFecha(d) {
+            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        }
+
+        function paseEsDiaHabil(f) {
+            const dia = f.getDay();
+            if (dia === 0 || dia === 6) return false;
+            return !PASE_FERIADOS.has(`${f.getMonth() + 1}-${f.getDate()}`);
+        }
+
+        function paseSumarDiasHabiles(inicio, cantidad) {
+            const f = new Date(inicio);
+            let agregados = 0;
+            while (agregados < cantidad) {
+                f.setDate(f.getDate() + 1);
+                if (paseEsDiaHabil(f)) agregados++;
+            }
+            return f;
+        }
+
+        function paseFechaInicio(fechaAsignacionISO) {
+            const asig = new Date(fechaAsignacionISO);
+            const inicio = new Date(asig);
+            const h = asig.getHours();
+            const m = asig.getMinutes();
+            if (h > 12 || (h === 12 && m > 0)) {
+                inicio.setDate(inicio.getDate() + 1);
+                while (!paseEsDiaHabil(inicio)) inicio.setDate(inicio.getDate() + 1);
+            }
+            inicio.setHours(7, 0, 0, 0);
+            return inicio;
+        }
+
+        function paseFechaLimite(inicio, nivel) {
+            const lim = paseSumarDiasHabiles(inicio, PASE_NIVELES_DIAS[nivel] || 5);
+            lim.setHours(12, 0, 0, 0);
+            return lim;
+        }
+
+        function paseDiasHabilesTranscurridos(inicio, fin) {
+            if (!inicio) return 0;
+            const ini = new Date(inicio);
+            const f = fin ? new Date(fin) : new Date();
+            if (ini > f) return 0;
+            let dias = 0;
+            const cur = new Date(ini);
+            while (!paseEsDiaHabil(cur) && cur <= f) cur.setDate(cur.getDate() + 1);
+            while (cur <= f) {
+                if (paseEsDiaHabil(cur)) dias++;
+                cur.setDate(cur.getDate() + 1);
+            }
+            return dias;
+        }
+
+        function paseEstadoPlazo(fechaLimite) {
+            const hoy = new Date();
+            const fin = new Date(fechaLimite);
+            hoy.setHours(0, 0, 0, 0);
+            fin.setHours(0, 0, 0, 0);
+            const diff = Math.floor((hoy - fin) / 86400000);
+            if (diff <= 0) return { color: 'verde', label: 'En plazo' };
+            if (diff <= 2) return { color: 'naranja', label: 'Vencido' };
+            return { color: 'rojo', label: 'Fuera de plazo' };
+        }
+
+        function paseDetalleTiempo(c) {
+            if (!c.fechaAsignacion || isNaN(new Date(c.fechaAsignacion).getTime())) return null;
+            const inicio = paseFechaInicio(c.fechaAsignacion);
+            const nivel = c.nivelSecretario || 1;
+            const limite = paseFechaLimite(inicio, nivel);
+            return {
+                inicio,
+                limite,
+                transcurridos: paseDiasHabilesTranscurridos(inicio, new Date()),
+                estado: paseEstadoPlazo(limite)
+            };
+        }
+
+        function paseDiasDemora(c) {
+            const d = paseDetalleTiempo(c);
+            if (!d) return 0;
+            const desde = new Date(d.limite);
+            desde.setHours(0, 0, 0, 0);
+            desde.setDate(desde.getDate() + 1);
+            return paseDiasHabilesTranscurridos(desde, new Date());
+        }
+
+        // --- Conexión con el sistema de Secretaría (segundo proyecto Firebase) ---
+        function iniciarPasesDigitales() {
+            if (unsubscribePases) return;
+            try {
+                const pasesApp = firebase.apps.find(a => a.name === 'pases') || firebase.initializeApp(PASES_FIREBASE_CONFIG, 'pases');
+                const pasesDb = pasesApp.firestore();
+                unsubscribePases = pasesDb.collection('operador').onSnapshot((snapshot) => {
+                    const indice = new Map();
+                    snapshot.forEach(doc => {
+                        if (doc.id === 'secretario_config') return;
+                        const data = doc.data();
+                        if (!data.id) data.id = doc.id;
+                        if (!data.empleadoAsignado && data.empleadoId) data.empleadoAsignado = data.empleadoId;
+                        if (!paseEsDeFioravante(data)) return;
+                        const clave = paseClaveExpediente(data.numero);
+                        if (!clave) return;
+                        if (!indice.has(clave)) indice.set(clave, []);
+                        indice.get(clave).push(data);
+                    });
+                    indice.forEach(lista => lista.sort((a, b) => paseFechaOrden(b) - paseFechaOrden(a)));
+                    pasesPorExpediente = indice;
+                    pasesEstado = 'listo';
+                    poblarFiltroIntervencionesPase();
+                    if (expedientesCargados) mostrarExpedientesEnTabla();
+                }, (error) => {
+                    console.error('Error al leer los pases digitales:', error);
+                    pasesEstado = 'error';
+                    if (expedientesCargados) mostrarExpedientesEnTabla();
+                });
+            } catch (error) {
+                console.error('No se pudo iniciar la conexión con los pases digitales:', error);
+                pasesEstado = 'error';
+                if (expedientesCargados) mostrarExpedientesEnTabla();
+            }
+        }
+
+        function paseBuscarPases(exp) {
+            if (!exp || !exp.numeroYAnio) return [];
+            return pasesPorExpediente.get(paseClaveExpediente(exp.numeroYAnio)) || [];
+        }
+
+        // --- Filtro de estado: control de Secretaría + estado del pase digital ---
+        // Los valores del filtro que empiezan con "pase:" se comparan contra el estado
+        // del pase mostrado en la tabla (el más reciente); el resto, contra el control.
+        function poblarFiltroEstadosPase() {
+            const grupo = document.getElementById('control-filter-pases');
+            if (!grupo) return;
+            grupo.innerHTML = Object.entries(PASE_ESTADOS)
+                .map(([clave, e]) => `<option value="pase:${clave}">${escHtml(e.label)}</option>`)
+                .join('') + '<option value="pase:sin_pase">Sin pase digital asignado</option>';
+        }
+
+        function coincideFiltroEstado(exp, valor) {
+            if (!valor) return true;
+            if (valor.startsWith('pase:')) {
+                if (pasesEstado !== 'listo') return false;
+                const estado = valor.slice(5);
+                const lista = paseBuscarPases(exp);
+                if (estado === 'sin_pase') return lista.length === 0;
+                return lista.length > 0 && lista[0].estado === estado;
+            }
+            return exp.controlSecretario === valor;
+        }
+
+        // --- Filtro de intervención: modo del expediente + modo indicado en el pase digital ---
+        // Las opciones del grupo "Intervención en pase digital" se arman con los modos que
+        // aparecen en la columna "Pase Digital asignado" (pase más reciente de cada expediente).
+        let intervencionesPaseClave = '';
+
+        function paseModoIntervencion(exp) {
+            const lista = paseBuscarPases(exp);
+            return lista.length ? String(lista[0].modoIntervencion ?? '').trim() : '';
+        }
+
+        function poblarFiltroIntervencionesPase() {
+            const grupo = document.getElementById('intervencion-filter-pases');
+            if (!grupo) return;
+            const modos = new Set();
+            pasesPorExpediente.forEach(lista => {
+                const m = String(lista[0]?.modoIntervencion ?? '').trim();
+                if (m) modos.add(m);
+            });
+            const ordenados = Array.from(modos).sort((a, b) => a.localeCompare(b, 'es'));
+            const clave = ordenados.join('\u0001');
+            if (clave === intervencionesPaseClave) return;
+            intervencionesPaseClave = clave;
+            const seleccionado = intervencionFilter.value;
+            grupo.innerHTML = ordenados
+                .map(m => `<option value="pase:${escHtml(m)}">${escHtml(m)}</option>`)
+                .join('');
+            intervencionFilter.value = seleccionado;
+        }
+
+        function coincideFiltroIntervencion(exp, valor) {
+            if (!valor) return true;
+            if (valor.startsWith('pase:')) {
+                if (pasesEstado !== 'listo') return false;
+                return paseModoIntervencion(exp) === valor.slice(5);
+            }
+            return exp.modoIntervencion === valor;
+        }
+
+        // --- Render: celda de la tabla ---
+        function paseFila(k, v) {
+            return v ? `<div class="pd-fila"><span class="pd-k">${k}</span><span class="pd-v">${escHtml(v)}</span></div>` : '';
+        }
+
+        function paseBadgeEstado(estado) {
+            const e = PASE_ESTADOS[estado];
+            return e
+                ? `<span class="pd-badge ${e.clase}">${e.label}</span>`
+                : `<span class="pd-badge">${escHtml(estado || 'Sin estado')}</span>`;
+        }
+
+        function paseReasignadoA(c) {
+            if (c.empleadoOriginal === PASE_EMPLEADO_ID && c.empleadoAsignado && c.empleadoAsignado !== PASE_EMPLEADO_ID) {
+                return paseNombreEmpleado(c.empleadoAsignado);
+            }
+            return '';
+        }
+
+        function paseBloquePlazoHTML(c) {
+            if (c.estado !== 'en_proceso') return '';
+            const d = paseDetalleTiempo(c);
+            if (!d) return '';
+            const clase = d.estado.color === 'verde' ? 'pd-plazo-ok' : (d.estado.color === 'naranja' ? 'pd-plazo-warn' : 'pd-plazo-bad');
+            const dem = paseDiasDemora(c);
+            return `<div class="pd-fila"><span class="pd-k">Plazo</span><span class="pd-v"><span class="${clase}">${d.estado.label}</span> · vence ${paseFmtFecha(d.limite)}</span></div>
+                <div class="pd-fila"><span class="pd-k">Demora</span><span class="pd-v"><span class="pd-demora ${dem > 0 ? 'pd-demora-roja' : 'pd-demora-verde'}">${dem}</span> días hábiles</span></div>`;
+        }
+
+        function renderPaseDigitalCelda(exp) {
+            if (pasesEstado === 'cargando') return '<span class="pd-muted">Cargando pase digital...</span>';
+            if (pasesEstado === 'error') return '<span class="pd-error">No se pudo consultar el pase digital</span>';
+            const lista = paseBuscarPases(exp);
+            if (!lista.length) return '<span class="pd-empty">Sin pase digital asignado</span>';
+            const c = lista[0];
+            const nivel = c.nivelSecretario || c.nivelOperador;
+            const reasignado = paseReasignadoA(c);
+            return `<div class="pd-card">
+                <div class="pd-top">${paseBadgeEstado(c.estado)}${nivel ? `<span class="pd-nivel">N${escHtml(nivel)}</span>` : ''}</div>
+                ${paseFila('Tipo', c.tipo)}
+                ${paseFila('Modo', c.modoIntervencion)}
+                ${paseFila('Escrito', c.tipoEscrito)}
+                ${paseFila('Secretario', PASE_SECRETARIOS[c.secretarioId] || '')}
+                ${paseFila('Asignado', c.fechaAsignacion ? paseFmtDt(c.fechaAsignacion) : '')}
+                ${reasignado ? paseFila('Reasignado', reasignado) : ''}
+                ${paseBloquePlazoHTML(c)}
+                <div class="pd-acciones">
+                    <button class="btn-sm btn-info pd-ver-btn" data-exp="${escHtml(exp.id)}">Ver detalle</button>
+                    ${lista.length > 1 ? `<span class="pd-mas">+${lista.length - 1} pase(s) más</span>` : ''}
+                </div>
+            </div>`;
+        }
+
+        // Versión en texto plano para el listado impreso
+        function paseResumenImpresion(exp) {
+            if (pasesEstado === 'cargando') return 'Sin datos (no cargó)';
+            if (pasesEstado === 'error') return 'No disponible';
+            const lista = paseBuscarPases(exp);
+            if (!lista.length) return 'Sin pase digital asignado';
+            const c = lista[0];
+            const e = PASE_ESTADOS[c.estado];
+            const nivel = c.nivelSecretario || c.nivelOperador;
+            const partes = [
+                `<strong>${escHtml(e ? e.label : (c.estado || 'Sin estado'))}</strong>${nivel ? ` · N${escHtml(nivel)}` : ''}`,
+                c.tipo ? `Tipo: ${escHtml(c.tipo)}` : '',
+                c.modoIntervencion ? `Intervención: ${escHtml(c.modoIntervencion)}` : '',
+                c.tipoEscrito ? `Escrito: ${escHtml(c.tipoEscrito)}` : '',
+                PASE_SECRETARIOS[c.secretarioId] ? `Secretario: ${escHtml(PASE_SECRETARIOS[c.secretarioId])}` : '',
+                c.fechaAsignacion ? `Asignado: ${escHtml(paseFmtDt(c.fechaAsignacion))}` : ''
+            ];
+            if (c.estado === 'en_proceso') {
+                const d = paseDetalleTiempo(c);
+                if (d) partes.push(`Plazo: ${d.estado.label} (vence ${paseFmtFecha(d.limite)}) · Demora: ${paseDiasDemora(c)} días háb.`);
+            }
+            if (lista.length > 1) partes.push(`+${lista.length - 1} pase(s) más`);
+            return partes.filter(Boolean).join('<br>');
+        }
+
+        // --- Render: modal con el detalle completo ---
+        function paseItem(label, valorHTML, full = false) {
+            if (valorHTML === '' || valorHTML == null) return '';
+            return `<div class="pd-item ${full ? 'pd-full' : ''}"><div class="pd-item-l">${label}</div><div class="pd-item-v">${valorHTML}</div></div>`;
+        }
+
+        function paseDetalleHTML(c, indice, total) {
+            const nivelOp = c.nivelOperador ? `N${escHtml(c.nivelOperador)}` : '';
+            const nivelSec = c.nivelSecretario ? `N${escHtml(c.nivelSecretario)}` : '';
+            const empAsignado = paseNombreEmpleado(c.empleadoAsignado);
+            const empOriginal = paseNombreEmpleado(c.empleadoOriginal);
+            const fuentes = [c.fuenteDeut ? 'DEUT' : '', c.fuenteSiged ? 'SIGED' : '', c.fuenteZimbra ? 'ZIMBRA' : ''].filter(Boolean).join(', ');
+
+            let plazoItems = '';
+            if (c.estado === 'en_proceso') {
+                const d = paseDetalleTiempo(c);
+                if (d) {
+                    const clase = d.estado.color === 'verde' ? 'pd-plazo-ok' : (d.estado.color === 'naranja' ? 'pd-plazo-warn' : 'pd-plazo-bad');
+                    const dem = paseDiasDemora(c);
+                    plazoItems =
+                        paseItem('Inicio del plazo', escHtml(paseFmtDt(d.inicio))) +
+                        paseItem('Fecha límite', escHtml(paseFmtDt(d.limite))) +
+                        paseItem('Días hábiles transcurridos', String(d.transcurridos)) +
+                        paseItem('Estado del plazo', `<span class="${clase}">${d.estado.label}</span>`) +
+                        paseItem('Demora (días hábiles)', `<span class="pd-demora ${dem > 0 ? 'pd-demora-roja' : 'pd-demora-verde'}">${dem}</span>`);
+                }
+            }
+
+            const historial = Array.isArray(c.historial) ? c.historial.slice().reverse() : [];
+            const movimientos = historial.length
+                ? historial.map(m => `<div class="pd-mov">
+                        <div class="pd-mov-meta">${escHtml(paseFmtDt(m.fecha))} · <strong>${escHtml(m.usuario || 'Sistema')}</strong></div>
+                        <div>${escHtml(m.accion || '')}</div>
+                        ${m.comentario ? `<div class="pd-mov-com">${escHtml(m.comentario)}</div>` : ''}
+                    </div>`).join('')
+                : '<div class="pd-muted">Sin movimientos registrados.</div>';
+
+            return `<div class="pd-bloque">
+                <div class="pd-bloque-titulo">
+                    <span>${total > 1 ? `Pase ${indice + 1} de ${total}${indice === 0 ? ' (más reciente)' : ''}` : 'Detalle del pase'}</span>
+                    ${paseBadgeEstado(c.estado)}
+                </div>
+                <div class="pd-grid">
+                    ${paseItem('Expediente', `<strong>${escHtml(c.numero || '')}</strong>`)}
+                    ${paseItem('Empleado asignado', escHtml(empAsignado))}
+                    ${empOriginal && empOriginal !== empAsignado ? paseItem('Empleado original', escHtml(empOriginal)) : ''}
+                    ${paseItem('Secretario', escHtml(PASE_SECRETARIOS[c.secretarioId] || ''))}
+                    ${paseItem('Nivel (operador)', nivelOp)}
+                    ${paseItem('Nivel (secretario)', nivelSec)}
+                    ${paseItem('Modo de intervención', escHtml(c.modoIntervencion || ''))}
+                    ${paseItem('Tipo', escHtml(c.tipo || ''))}
+                    ${paseItem('Tipo de escrito', escHtml(c.tipoEscrito || ''))}
+                    ${paseItem('Fecha y hora de pase', c.fechaPaseSecretario ? escHtml(paseFmtDt(c.fechaPaseSecretario)) : '')}
+                    ${paseItem('Fecha y hora de asignación', c.fechaAsignacion ? escHtml(paseFmtDt(c.fechaAsignacion)) : '')}
+                    ${plazoItems}
+                    ${paseItem('Datos de la parte', escHtml(c.datosParte || ''), true)}
+                    ${paseItem('DNI', escHtml(c.dni || ''))}
+                    ${paseItem('Asiste a la Defensoría', escHtml(c.asisteDefensoria || ''))}
+                    ${paseItem('Fuente', escHtml(fuentes))}
+                </div>
+                <div class="pd-mov-titulo">Movimientos</div>
+                ${movimientos}
+            </div>`;
+        }
+
+        function abrirModalPase(expId) {
+            const exp = expedientes.find(e => e.id === expId);
+            if (!exp) return;
+            const lista = paseBuscarPases(exp);
+            document.getElementById('pase-modal-exp').innerHTML =
+                `<strong>${escHtml(exp.numeroYAnio || 'N/A')}</strong> · ${escHtml(exp.caratula || 'N/A')}`;
+            document.getElementById('pase-modal-body').innerHTML = lista.length
+                ? lista.map((c, i) => paseDetalleHTML(c, i, lista.length)).join('')
+                : '<div class="pd-muted">Este expediente no tiene pase digital asignado.</div>';
+            document.getElementById('pase-digital-modal').style.display = 'flex';
+        }
+
+        function cerrarModalPase() {
+            document.getElementById('pase-digital-modal').style.display = 'none';
+        }
+
         // --- Lógica de la Aplicación ---
         async function cargarExpedientes() {
             try {
-                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">Cargando expedientes...</td></tr>`; 
+                expedientesTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px;">Cargando expedientes...</td></tr>`; 
                 const querySnapshot = await db.collection('expedientes').get();
                 expedientes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
@@ -1208,10 +1728,11 @@
                      return fechaB - fechaA; 
                 });
 
+                expedientesCargados = true;
                 mostrarExpedientesEnTabla();
             } catch (error) {
                 console.error('Error al cargar expedientes:', error);
-                expedientesTbody.innerHTML = `<table><td colspan="7" style="text-align: center; color: red;">Error al cargar los expedientes (Verifica los permisos de Firebase)</td></tr>`; 
+                expedientesTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">Error al cargar los expedientes (Verifica los permisos de Firebase)</td></tr>`; 
             }
         }
 
@@ -1247,9 +1768,9 @@
                     if (recordSignature !== selectedSignature) return false;
                 }
                 
-                if (selectedControl && exp.controlSecretario !== selectedControl) return false;
+                if (!coincideFiltroEstado(exp, selectedControl)) return false;
                 if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
-                if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
+                if (!coincideFiltroIntervencion(exp, selectedIntervencion)) return false;
                 
                 return true;
             });
@@ -1267,7 +1788,7 @@
             
             if (expedientesPagina.length === 0) {
                 const message = expedientes.length === 0 ? "No hay expedientes registrados" : "No se encontraron expedientes con los filtros aplicados.";
-                expedientesTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">${message}</td></tr>`; 
+                expedientesTbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px;">${message}</td></tr>`; 
             } else {
                 expedientesPagina.forEach((exp, index) => {
                     const row = expedientesTbody.insertRow();
@@ -1295,11 +1816,12 @@
                             </span>
                         </td>
                         <td>${observacionesTexto}</td>
-                        <td class="no-print">
+                        <td class="no-print"><div class="acciones-celda">
                             <button class="btn-sm btn-info ver-btn" data-id="${exp.id}">Ver</button>
                             <button class="btn-sm btn-warning editar-btn" data-id="${exp.id}">Editar</button>
                             <button class="btn-sm btn-danger eliminar-btn" data-id="${exp.id}">Eliminar</button>
-                        </td>
+                        </div></td>
+                        <td class="col-pase-digital">${renderPaseDigitalCelda(exp)}</td>
                     `;
                 });
             }
@@ -1413,9 +1935,9 @@
                     const recordSignature = exp.firmaSecretario === 'si' ? 'Secretario' : exp.firmaDefensor;
                     if (recordSignature !== selectedSignature) return false;
                 }
-                if (selectedControl && exp.controlSecretario !== selectedControl) return false;
+                if (!coincideFiltroEstado(exp, selectedControl)) return false;
                 if (selectedJuzgado && exp.juzgado !== selectedJuzgado) return false;
-                if (selectedIntervencion && exp.modoIntervencion !== selectedIntervencion) return false;
+                if (!coincideFiltroIntervencion(exp, selectedIntervencion)) return false;
                 return true;
             });
             
@@ -1442,10 +1964,10 @@
             `;
             
             if (hayFiltros) {
-                contenidoHTML += `<div class="info-filtros"><strong>Filtros aplicados:</strong><br>${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}${controlFilter.value ? `Control: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}${intervencionFilter.value ? `Intervención: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}<strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong></div>`;
+                contenidoHTML += `<div class="info-filtros"><strong>Filtros aplicados:</strong><br>${searchInput.value ? `Búsqueda: "${searchInput.value}"<br>` : ''}${monthFilter.value ? `Mes: ${monthFilter.options[monthFilter.selectedIndex].text}<br>` : ''}${yearFilter.value ? `Año: ${yearFilter.value}<br>` : ''}${signatureFilter.value ? `Firma: ${signatureFilter.options[signatureFilter.selectedIndex].text}<br>` : ''}${controlFilter.value ? `${controlFilter.value.startsWith('pase:') ? 'Estado de pase' : 'Control'}: ${controlFilter.options[controlFilter.selectedIndex].text}<br>` : ''}${juzgadoFilter.value ? `Juzgado: ${juzgadoFilter.options[juzgadoFilter.selectedIndex].text}<br>` : ''}${intervencionFilter.value ? `${intervencionFilter.value.startsWith('pase:') ? 'Intervención (pase digital)' : 'Intervención'}: ${intervencionFilter.options[intervencionFilter.selectedIndex].text}<br>` : ''}<strong>Total de registros filtrados: ${expedientesFiltrados.length}</strong></div>`;
             }
             
-            contenidoHTML += `<table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th></tr></thead><tbody>`;
+            contenidoHTML += `<table><thead><tr><th>#</th><th>Fecha de pase</th><th>Expediente y Carátula</th><th>Descripción</th><th>Firma Digital</th><th>Observaciones</th><th>Pase Digital asignado</th></tr></thead><tbody>`;
             
             expedientesFiltrados.forEach((exp, index) => {
                 const numeroDescendente = expedientesFiltrados.length - index;
@@ -1457,7 +1979,7 @@
                 }
                 const firmaDigital = exp.fechaFirmaDigital ? 'Sí' : 'No';
                 
-                contenidoHTML += `<tr><td>${numeroDescendente}</td><td>${exp.fechaPase || 'N/A'}</td><td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td><td>${exp.descripcion || 'N/A'}</td><td class="firma-digital">${firmaDigital}</td><td>${observacionesTexto}</td></tr>`;
+                contenidoHTML += `<tr><td>${numeroDescendente}</td><td>${exp.fechaPase || 'N/A'}</td><td><strong>${exp.numeroYAnio || 'N/A'}</strong><br>${exp.caratula || 'N/A'}</td><td>${exp.descripcion || 'N/A'}</td><td class="firma-digital">${firmaDigital}</td><td>${observacionesTexto}</td><td>${paseResumenImpresion(exp)}</td></tr>`;
             });
             
             contenidoHTML += `</tbody></table><p style="text-align: right; margin-top: 20px; font-size: 10px;">Generado el ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}</p></body></html>`;
@@ -1803,6 +2325,7 @@
             agregarNotaBtn.addEventListener('click', agregarNota);
             textoNotaInput.addEventListener('keypress', (e) => e.key === 'Enter' && (e.preventDefault(), agregarNota()));
             
+            poblarFiltroEstadosPase();
             const filtros = [searchInput, monthFilter, yearFilter, signatureFilter, controlFilter, juzgadoFilter, intervencionFilter];
             
             filtros.forEach(el => {
@@ -1821,6 +2344,20 @@
                 if (e.target === registroModal) cerrarModalRegistro();
                 if (e.target === alertModal) alertModal.style.display = 'none';
                 if (e.target === logoutAlertModal) logoutAlertModal.style.display = 'none';
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            expedientesTbody.addEventListener('click', (e) => {
+                const btn = e.target.closest('.pd-ver-btn');
+                if (btn) abrirModalPase(btn.dataset.exp);
+            });
+            document.getElementById('pase-modal-x-btn').addEventListener('click', cerrarModalPase);
+            document.getElementById('pase-modal-cerrar-btn').addEventListener('click', cerrarModalPase);
+            document.getElementById('pase-digital-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'pase-digital-modal') cerrarModalPase();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') cerrarModalPase();
             });
         });
     </script>
